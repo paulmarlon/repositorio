@@ -37,7 +37,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 4',
+    'title' => 'Sistema',
     'title_prefix' => '',
     'title_postfix' => '',
 

@@ -79,16 +79,22 @@ Table gestiones_academicas {
     anio integer [not null, note: "Ej: 2026"]
     periodo varchar [not null, note: "Ej: Gestión I, Gestión II"]
     activo boolean [default: true]
+    created_at timestamp
+    updated_at timestamp
 }
 
 Table tipos_trabajo {
     id integer [primary key, increment]
     nombre varchar [not null, note: "Ej: Monografía, Tesis"]
+    created_at timestamp
+    updated_at timestamp
 }
 
 Table categorias {
     id integer [primary key, increment]
     nombre varchar [not null, note: "Ej: Seguridad Ciudadana, Investigación Criminal"]
+    created_at timestamp
+    updated_at timestamp
 }
 
 Table trabajos_grado {
@@ -97,12 +103,13 @@ Table trabajos_grado {
     supervisor_id integer [ref: > users.id, note: "Supervisor que evalúa"]
     tipo_id integer [not null, ref: > tipos_trabajo.id]
     categoria_id integer [not null, ref: > categorias.id]
-    gestion_id integer [not null, ref: > gestiones_academicas.id]
+    gestion_id integer [not long, ref: > gestiones_academicas.id]
     titulo varchar [not null]
     resumen text [not null]
     archivo_url varchar [not null, note: "Ruta del PDF"]
     estado varchar [not null, default: "pendiente", note: "pendiente, aceptado, rechazado"]
     puntaje decimal(5,2) [note: "Nota asignada si es aceptado"]
     motivo_rechazo text [note: "Justificación si es rechazado"]
-    creado_en timestamp
+    created_at timestamp
+    updated_at timestamp
 }

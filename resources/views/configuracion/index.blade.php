@@ -1,6 +1,13 @@
 @extends('adminlte::page')
 
-@section('title', 'Configuración del Instituto')
+@section('title', $instituto->nombre_instituto ?? 'Sistema')
+
+@section('adminlte_css')
+    @parent
+    @if (isset($instituto) && $instituto->logo)
+        <link rel="icon" type="image/png" href="{{ asset('storage/' . $instituto->logo) }}">
+    @endif
+@endsection
 
 @section('css')
     <!-- Leaflet CSS -->

@@ -1,5 +1,12 @@
 @extends('adminlte::page')
+@section('title', $instituto->nombre_instituto ?? 'Sistema')
 
+@section('adminlte_css')
+    @parent
+    @if (isset($instituto) && $instituto->logo)
+        <link rel="icon" type="image/png" href="{{ asset('storage/' . $instituto->logo) }}">
+    @endif
+@endsection
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
