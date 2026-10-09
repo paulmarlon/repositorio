@@ -1,0 +1,108 @@
+// ==========================================
+// REPOSITORIO DIGITAL (DBML ESTÁNDAR LARAVEL/SPATIE)
+// ==========================================
+
+Table configuracion_instituto {
+    id integer [primary key, increment]
+    nombre_instituto varchar [not null]
+    logo varchar [null, note: "Ruta de la imagen del logo"]
+    direccion varchar [null]
+    celular varchar [null]
+    latitud decimal(10,8) [note: "Coordenada GPS: Latitud"]
+    longitud decimal(11,8) [note: "Coordenada GPS: Longitud"]
+    created_at timestamp
+    updated_at timestamp
+}
+
+// Tabla estándar de Laravel + Spatie (users)
+Table users {
+    id bigint [pk, increment]
+    nombres varchar
+    paterno varchar [null]
+    materno varchar [null]
+    ci varchar(30) [unique]
+    email varchar [unique]
+    email_verified_at timestamp [null]
+    password varchar
+    avatar varchar [null]
+    activo boolean [default: true]
+    two_factor_code varchar(10) [null]
+    two_factor_expires_at timestamp [null]
+    remember_token varchar [null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+// ==========================================
+// TABLAS DE SPATIE LARAVEL PERMISSION
+// ==========================================
+
+Table roles {
+    id integer [primary key, increment]
+    name varchar [not null]
+    guard_name varchar [not null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table permissions {
+    id integer [primary key, increment]
+    name varchar [not null]
+    guard_name varchar [not null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table model_has_permissions {
+    permission_id integer [not null, ref: > permissions.id]
+    model_type varchar [not null]
+    model_id integer [not null, ref: > users.id]
+}
+
+Table model_has_roles {
+    role_id integer [not null, ref: > roles.id]
+    model_type varchar [not null]
+    model_id integer [not null, ref: > users.id]
+}
+
+Table role_has_permissions {
+    permission_id integer [not null, ref: > permissions.id]
+    role_id integer [not null, ref: > roles.id]
+}
+
+// ==========================================
+// GESTIONES Y TRABAJOS ACADÉMICOS
+// ==========================================
+
+Table gestiones_academicas {
+    id integer [primary key, increment]
+    anio integer [not null, note: "Ej: 2026"]
+    periodo varchar [not null, note: "Ej: Gestión I, Gestión II"]
+    activo boolean [default: true]
+}
+
+Table tipos_trabajo {
+    id integer [primary key, increment]
+    nombre varchar [not null, note: "Ej: Monografía, Tesis"]
+}
+
+Table categorias {
+    id integer [primary key, increment]
+    nombre varchar [not null, note: "Ej: Seguridad Ciudadana, Investigación Criminal"]
+}
+
+Table trabajos_grado {
+    id integer [primary key, increment]
+    autor_id integer [not null, ref: > users.id, note: "Estudiante propietario"]
+    supervisor_id integer [ref: > users.id, note: "Supervisor que evalúa"]
+    tipo_id integer [not null, ref: > tipos_trabajo.id]
+    categoria_id integer [not null, ref: > categorias.id]
+    gestion_id integer [not null, ref: > gestiones_academicas.id]
+    titulo varchar [not null]
+    resumen text [not null]
+    archivo_url varchar [not null, note: "Ruta del PDF"]
+    estado varchar [not null, default: "pendiente", note: "pendiente, aceptado, rechazado"]
+    puntaje decimal(5,2) [note: "Nota asignada si es aceptado"]
+    motivo_rechazo text [note: "Justificación si es rechazado"]
+    creado_en timestamp
+}
