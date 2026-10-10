@@ -17,12 +17,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'nombres' => 'Admin',
-            'paterno' => 'Sistema',
-            'materno' => '',
+            'nombres' => 'paul',
+            'paterno' => 'quispe',
+            'materno' => 'veizaga',
             'ci' => '12345678',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('password'),
+            'email' => 'paul@adhara.tech',
+            'password' => Hash::make('7539518520'),
             'avatar' => null, // Opcional, al estar en null usará las iniciales
             'activo' => true,
         ]);

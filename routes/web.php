@@ -1,12 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\ConfiguracionInstitutoController;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Middleware\RequireTwoFactor;
+use App\Http\Controllers\TipoTrabajoController;
+use App\Http\Controllers\GestionAcademicaController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Middleware\RequireTwoFactor;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,6 +22,23 @@ Route::middleware(['auth', RequireTwoFactor::class])->group(function () {
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/configuracion', [ConfiguracionInstitutoController::class, 'index'])->name('configuracion.index');
     Route::put('/configuracion', [ConfiguracionInstitutoController::class, 'update'])->name('configuracion.update');
+
+    // Gestión Académica
+    Route::prefix('admin')->group(function () {
+        Route::get('gestiones/papelera', [GestionAcademicaController::class, 'trash'])->name('admin.gestiones.papelera');
+        Route::post('gestiones/{id}/restaurar', [GestionAcademicaController::class, 'restore'])->name('admin.gestiones.restaurar');
+        Route::resource('gestiones', GestionAcademicaController::class)
+            ->parameters(['gestiones' => 'gestion'])
+            ->names('admin.gestiones');
+    });
+    // Tipos de Trabajo
+    Route::prefix('admin')->group(function () {
+        Route::get('tipo-trabajos/papelera', [TipoTrabajoController::class, 'trash'])->name('admin.tipo-trabajos.papelera');
+        Route::post('tipo-trabajos/{id}/restaurar', [TipoTrabajoController::class, 'restore'])->name('admin.tipo-trabajos.restaurar');
+        Route::resource('tipo-trabajos', TipoTrabajoController::class)
+            ->parameters(['tipo-trabajos' => 'tipoTrabajo'])
+            ->names('admin.tipo-trabajos');
+    });
 });
 
 Route::get('/two-factor-challenge', [TwoFactorController::class, 'create'])->name('two-factor.login');

@@ -810,6 +810,18 @@ return [
             'icon' => 'bi bi-building',
         ],
         [
+            'text' => 'Gestiones Académicas',
+            'route' => 'admin.gestiones.index',
+            'icon' => 'bi bi-calendar-event',
+            'active' => ['admin/gestiones*'],
+        ],
+        [
+            'text' => 'Tipos de Trabajo',
+            'route' => 'admin.tipo-trabajos.index',
+            'icon' => 'bi bi-folder2-open',
+            'active' => ['admin/tipo-trabajos*'],
+        ],
+        [
             'text' => 'pages',
             'url' => 'admin/pages',
             'icon' => 'bi bi-file-earmark',
@@ -919,207 +931,128 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => false,
+            'active' => true,
             'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/2.1.8/js/dataTables.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css',
-                ],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdn.datatables.net/2.1.8/js/dataTables.min.js'],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js'],
+                ['type' => 'css', 'asset' => false, 'location' => '//cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css'],
             ],
         ],
-        // The Datatables 'Buttons' extension, required by the 'with-buttons'
-        // attribute of the datatable component. JSZip powers the excel export
-        // and pdfmake the pdf one, drop them when you don't need those.
-
         'DatatablesButtons' => [
-            'active' => false,
+            'active' => true,
             'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/buttons/4.0.2/js/dataTables.buttons.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/buttons/4.0.2/js/buttons.bootstrap5.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/buttons/4.0.2/js/buttons.html5.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/buttons/4.0.2/js/buttons.print.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.3.3/pdfmake.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.3.3/vfs_fonts.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/buttons/4.0.2/css/buttons.bootstrap5.min.css',
-                ],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdn.datatables.net/buttons/4.0.2/js/dataTables.buttons.min.js'],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdn.datatables.net/buttons/4.0.2/js/buttons.bootstrap5.min.js'],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdn.datatables.net/buttons/4.0.2/js/buttons.html5.min.js'],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdn.datatables.net/buttons/4.0.2/js/buttons.print.min.js'],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.3.3/pdfmake.min.js'],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.3.3/vfs_fonts.js'],
+                ['type' => 'css', 'asset' => false, 'location' => '//cdn.datatables.net/buttons/4.0.2/css/buttons.bootstrap5.min.css'],
             ],
         ],
         'Select2' => [
-            'active' => false,
+            'active' => true,
             'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js',
-                ],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js'],
+                ['type' => 'css', 'asset' => false, 'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css'],
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css',
-                ],
-
-                // The AdminLTE v4 compatibility theme for Select2. Replace it
-                // by the 'adminlte-select2.rtl.min.css' file on RTL mode.
-
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/admin-lte@{version}/dist/css/adminlte-select2.min.css',
-                    'rtl' => '//cdn.jsdelivr.net/npm/admin-lte@{version}/dist/css/adminlte-select2.rtl.min.css',
+                    'location' => '//cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte-select2.min.css',
+                    'rtl' => '//cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte-select2.rtl.min.css',
                 ],
             ],
         ],
         'TomSelect' => [
             'active' => false,
             'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css',
-                ],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js'],
+                ['type' => 'css', 'asset' => false, 'location' => '//cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css'],
             ],
         ],
         'Tabulator' => [
             'active' => false,
             'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/tabulator-tables@6.3.0/dist/js/tabulator.min.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/tabulator-tables@6.3.0/dist/css/tabulator_bootstrap5.min.css',
-                ],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdn.jsdelivr.net/npm/tabulator-tables@6.3.0/dist/js/tabulator.min.js'],
+                ['type' => 'css', 'asset' => false, 'location' => '//cdn.jsdelivr.net/npm/tabulator-tables@6.3.0/dist/css/tabulator_bootstrap5.min.css'],
             ],
         ],
         'Flatpickr' => [
             'active' => false,
             'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css',
-                ],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js'],
+                ['type' => 'css', 'asset' => false, 'location' => '//cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css'],
             ],
         ],
         'Quill' => [
             'active' => false,
             'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css',
-                ],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js'],
+                ['type' => 'css', 'asset' => false, 'location' => '//cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css'],
             ],
         ],
         'NoUiSlider' => [
             'active' => false,
             'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.css',
-                ],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.js'],
+                ['type' => 'css', 'asset' => false, 'location' => '//cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.css'],
             ],
         ],
         'Chartjs' => [
             'active' => false,
             'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js',
-                ],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js'],
             ],
         ],
         'Sweetalert2' => [
-            'active' => false,
+            'active' => true,
+            'files' => [
+                ['type' => 'css', 'asset' => false, 'location' => 'https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css'],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11'],
+            ],
+        ],
+        'Inputmask' => [
+            'active' => true,
+            'files' => [
+                ['type' => 'js', 'asset' => false, 'location' => 'https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js'],
+            ],
+        ],
+        'AntiBack' => [
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11',
+                    'location' => 'data:text/javascript;base64,' . base64_encode('
+                        history.pushState(null, null, location.href);
+                        window.addEventListener("popstate", function () {
+                            window.location.href = "/login";
+                        });
+
+                        window.addEventListener("pageshow", function(e) {
+                            if (e.persisted || (performance.navigation && performance.navigation.type === 2)) {
+                                window.location.href = "/login";
+                            }
+                        });
+
+                        window.addEventListener("focus", function() {
+                            fetch("/admin/configuracion", { method: "HEAD", redirect: "manual" })
+                                .then(response => {
+                                    if (response.status === 401 || response.status === 302 || response.type === "opaqueredirect") {
+                                        window.location.href = "/login";
+                                    }
+                                }).catch(() => {});
+                        });
+                    ')
                 ],
             ],
         ],
         'Pace' => [
             'active' => false,
             'files' => [
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-center-radar.min.css',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js',
-                ],
+                ['type' => 'css', 'asset' => false, 'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-center-radar.min.css'],
+                ['type' => 'js', 'asset' => false, 'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js'],
             ],
         ],
     ],
