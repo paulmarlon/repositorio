@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\ConfiguracionInstitutoController;
 use App\Http\Controllers\TipoTrabajoController;
 use App\Http\Controllers\GestionAcademicaController;
+use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\RequireTwoFactor;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +40,10 @@ Route::middleware(['auth', RequireTwoFactor::class])->group(function () {
             ->parameters(['tipo-trabajos' => 'tipoTrabajo'])
             ->names('admin.tipo-trabajos');
     });
+    // Rutas para Categorías
+    Route::get('categorias/papelera', [CategoriaController::class, 'trash'])->name('admin.categorias.papelera');
+    Route::post('categorias/{id}/restaurar', [CategoriaController::class, 'restore'])->name('admin.categorias.restaurar');
+    Route::resource('categorias', CategoriaController::class)->names('admin.categorias');
 });
 
 Route::get('/two-factor-challenge', [TwoFactorController::class, 'create'])->name('two-factor.login');

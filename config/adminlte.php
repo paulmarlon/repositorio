@@ -822,6 +822,12 @@ return [
             'active' => ['admin/tipo-trabajos*'],
         ],
         [
+            'text' => 'Categorías',
+            'route' => 'admin.categorias.index',
+            'icon' => 'bi bi-tags-fill',
+            'active' => ['admin/categorias*'],
+        ],
+        [
             'text' => 'pages',
             'url' => 'admin/pages',
             'icon' => 'bi bi-file-earmark',
