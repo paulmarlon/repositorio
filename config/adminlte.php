@@ -828,6 +828,12 @@ return [
             'active' => ['admin/categorias*'],
         ],
         [
+            'text' => 'Usuarios',
+            'route' => 'admin.usuarios.index',
+            'icon' => 'bi bi-people-fill',
+            'active' => ['admin/usuarios*'],
+        ],
+        [
             'text' => 'pages',
             'url' => 'admin/pages',
             'icon' => 'bi bi-file-earmark',

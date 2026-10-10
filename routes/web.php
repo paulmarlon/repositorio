@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\ConfiguracionInstitutoController;
 use App\Http\Controllers\TipoTrabajoController;
 use App\Http\Controllers\GestionAcademicaController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\RequireTwoFactor;
@@ -44,6 +45,8 @@ Route::middleware(['auth', RequireTwoFactor::class])->group(function () {
     Route::get('categorias/papelera', [CategoriaController::class, 'trash'])->name('admin.categorias.papelera');
     Route::post('categorias/{id}/restaurar', [CategoriaController::class, 'restore'])->name('admin.categorias.restaurar');
     Route::resource('categorias', CategoriaController::class)->names('admin.categorias');
+    Route::get('usuarios', [UserController::class, 'index'])->name('admin.usuarios.index');
+    Route::post('usuarios/{usuario}/toggle-active', [UserController::class, 'toggleActive'])->name('admin.usuarios.toggle-active');
 });
 
 Route::get('/two-factor-challenge', [TwoFactorController::class, 'create'])->name('two-factor.login');

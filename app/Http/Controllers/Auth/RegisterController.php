@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth; // Asegúrate de importar Auth
 
 class RegisterController extends Controller
 {
@@ -79,7 +81,24 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'avatar' => $avatarPath,
-            'activo' => true,
+            'activo' => false,
         ]);
+    }
+    /**
+     * The user has been registered.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function registered(Request $request, $user)
+    {
+        // Cerramos la sesión automáticamente ya que se acaba de registrar y está inactivo
+        Auth::logout();
+
+        // Redirigimos al login con un mensaje flash indicando el estado pendiente
+        return redirect()->route('login')
+            ->with('mensaje', '¡Registro exitoso! Tu cuenta se encuentra pendiente de habilitación por un supervisor.')
+            ->with('icon', 'info');
     }
 }

@@ -1,12 +1,23 @@
 @extends('adminlte::auth.auth-page', ['auth_type' => 'login'])
 
+@section('title', $instituto->nombre_instituto ?? config('app.name', 'Sistema'))
+
+@section('adminlte_css')
+    @parent
+    @if (isset($instituto) && $instituto->logo)
+        <link rel="icon" type="image/png" href="{{ asset('storage/' . $instituto->logo) }}">
+    @endif
+@endsection
+
 @section('adminlte_css_pre')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 @stop
 
 @section('auth_body')
     <div class="login-logo">
-        <a href="{{ url('/') }}"><b>{{ config('app.name', 'Laravel') }}</b></a>
+        <a href="{{ url('/') }}">
+            <b>{{ $instituto->nombre_instituto ?? config('app.name', 'Sistema') }}</b>
+        </a>
     </div>
 
     <div class="card">
