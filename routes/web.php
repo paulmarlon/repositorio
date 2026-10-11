@@ -101,3 +101,9 @@ Route::middleware(['auth', RequireTwoFactor::class])->group(function () {
         });
     });
 });
+/*
+|--------------------------------------------------------------------------
+| Rutas Públicas de Verificación (QR) - Sin Autenticación Requerida
+|--------------------------------------------------------------------------
+*/
+Route::get('/verificar/{token}', [RepositorioController::class, 'verificarPublica'])->name('repositorio.verificar');

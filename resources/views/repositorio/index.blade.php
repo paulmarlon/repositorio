@@ -1,6 +1,13 @@
 @extends('adminlte::page')
 
-@section('title', 'Repositorio Institucional')
+@section('title', $instituto->nombre_instituto ?? 'Sistema')
+
+@section('adminlte_css')
+    @parent
+    @if (isset($instituto) && $instituto->logo)
+        <link rel="icon" type="image/png" href="{{ asset('storage/' . $instituto->logo) }}">
+    @endif
+@endsection
 
 @section('content_header')
     <h1><i class="bi bi-journal-richtext"></i> Repositorio Institucional de Trabajos de Grado</h1>

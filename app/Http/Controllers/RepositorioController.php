@@ -42,10 +42,15 @@ class RepositorioController extends Controller
 
         $trabajo->load(['autor', 'tipoTrabajo', 'categoria', 'gestion', 'supervisor']);
 
-        // URL pública que apuntará este trabajo para validación mediante QR
-        $urlValidacion = route('repositorio.show', $trabajo->id);
+        // Asegurarnos de que tenga un token si se creó antes
+        if (!$trabajo->token) {
+            $trabajo->token = \Illuminate\Support\Str::random(32);
+            $trabajo->save();
+        }
 
-        // Generador de código QR en formato SVG vía API rápida y segura
+        // URL pública que apuntará este trabajo para validación mediante QR
+        $urlValidacion = route('repositorio.verificar', $trabajo->token);
+
         $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' . urlencode($urlValidacion);
 
         return view('repositorio.show', compact('trabajo', 'esAutor', 'esAdmin', 'esSupervisor', 'qrCodeUrl'));
@@ -85,5 +90,17 @@ class RepositorioController extends Controller
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . basename($path) . '"',
         ]);
+    }
+    /**
+     * Verificación pública del trabajo de grado vía Código QR (Sin login requerido).
+     */
+    public function verificarPublica(string $token)
+    {
+        $trabajo = TrabajoGrado::with(['autor', 'tipoTrabajo', 'categoria', 'gestion', 'supervisor'])
+            ->where('token', $token)
+            ->where('estado', 'aceptado')
+            ->firstOrFail();
+
+        return view('repositorio.verificar-publica', compact('trabajo'));
     }
 }

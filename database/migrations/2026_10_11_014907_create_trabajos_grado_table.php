@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('estado')->default('pendiente'); // pendiente, aceptado, rechazado
             $table->decimal('puntaje', 5, 2)->nullable();
             $table->text('motivo_rechazo')->nullable();
+            $table->string('token')->nullable()->unique()->after('id');
 
             $table->softDeletes();
             $table->timestamps();
@@ -34,8 +35,10 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('trabajos_grado');
+        Schema::table('trabajos_grado', function (Blueprint $table) {
+            $table->dropColumn('token');
+        });
     }
 };
