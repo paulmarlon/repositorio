@@ -18,7 +18,13 @@ class UserController extends Controller
 
     public function toggleActive(User $usuario)
     {
-        // Cambiamos el estado de activación (Habilitar / Inhabilitar)
+        // SEGURIDAD: Un supervisor no puede desactivar/activar a un Administrador
+        if (!auth()->user()->hasRole('Administrador') && $usuario->hasRole('Administrador')) {
+            return redirect()->route('admin.usuarios.index')
+                ->with('mensaje', 'Acción no permitida: No puedes modificar el estado de un Administrador.')
+                ->with('icon', 'error');
+        }
+
         $usuario->activo = !$usuario->activo;
         $usuario->save();
 
@@ -48,16 +54,25 @@ class UserController extends Controller
             'gestion_id' => 'required|exists:gestion_academicas,id',
         ]);
 
-        // Si ya existe un registro para este usuario en esta gestión, lo actualiza al nuevo rol.
-        // Si no existe, lo crea.
+        // SEGURIDAD: Si el usuario a modificar es Administrador y el actual NO es admin, bloquear
+        if (!auth()->user()->hasRole('Administrador') && $usuario->hasRole('Administrador')) {
+            return back()->with('mensaje', 'No tienes permisos para modificar los roles de un Administrador.')->with('icon', 'error');
+        }
+
+        // SEGURIDAD: Si el rol que intenta asignar es Administrador y el actual NO es admin, bloquear
+        $roleAAsignar = Role::findOrFail($request->role_id);
+        if (!auth()->user()->hasRole('Administrador') && $roleAAsignar->name === 'Administrador') {
+            return back()->with('mensaje', 'No tienes autorización para asignar el rol de Administrador.')->with('icon', 'error');
+        }
+
         ModelHasRoleGestion::updateOrCreate(
             [
                 'model_id' => $usuario->id,
                 'model_type' => User::class,
-                'gestion_id' => $request->gestion_id, // Busca por gestión
+                'gestion_id' => $request->gestion_id,
             ],
             [
-                'role_id' => $request->role_id, // Actualiza al nuevo rol seleccionado
+                'role_id' => $request->role_id,
             ]
         );
 

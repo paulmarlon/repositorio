@@ -45,6 +45,7 @@ Route::middleware(['auth', RequireTwoFactor::class])->group(function () {
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::put('/update', [ProfileController::class, 'update'])->name('update');
     });
+
     // Módulo de Trabajos de Grado (Estudiante)
     Route::middleware(['role.gestion:Usuario'])->prefix('estudiante')->name('estudiante.')->group(function () {
         Route::get('/trabajos', [TrabajoGradoController::class, 'indexEstudiante'])->name('trabajos.index');
@@ -58,6 +59,7 @@ Route::middleware(['auth', RequireTwoFactor::class])->group(function () {
         Route::get('/bandeja', [TrabajoGradoController::class, 'indexSupervisor'])->name('bandeja.index');
         Route::patch('/trabajos/{trabajo}/evaluar', [TrabajoGradoController::class, 'evaluar'])->name('trabajos.evaluar');
     });
+
     // Módulo de Repositorio Global y Visor Protegido
     Route::prefix('repositorio')->name('repositorio.')->group(function () {
         Route::get('/', [RepositorioController::class, 'index'])->name('index');
@@ -87,20 +89,20 @@ Route::middleware(['auth', RequireTwoFactor::class])->group(function () {
         Route::post('categorias/{id}/restaurar', [CategoriaController::class, 'restore'])->name('categorias.restaurar');
         Route::resource('categorias', CategoriaController::class);
 
-        // Usuarios y Asignación de Roles por Gestión
-        Route::prefix('usuarios')->name('usuarios.')->group(function () {
+        // Usuarios y Asignación de Roles por Gestión (Acceso para Administrador y Supervisor)
+        Route::middleware(['role.gestion:Administrador|Supervisor'])->prefix('usuarios')->name('usuarios.')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('index');
             Route::patch('/{usuario}/toggle', [UserController::class, 'toggleActive'])->name('toggle');
             Route::get('/{usuario}/roles', [UserController::class, 'asignarRol'])->name('asignar.rol');
             Route::post('/{usuario}/roles', [UserController::class, 'guardarRol'])->name('guardar.rol');
             Route::delete('/roles/{id}', [UserController::class, 'eliminarRolGestion'])->name('eliminar.rol');
 
-            // CORREGIDO AQUÍ (sin repetir la palabra usuarios)
             Route::get('roles/papelera', [UserController::class, 'papeleraRoles'])->name('roles.papelera');
-            Route::post('roles/{id}/restaurar', [UserController::class, 'restaurarRol'])->name('roles.restaurar');
+            Route::post('roles/{id}/restaurar', [UserController::class, 'restaurarRol'])->name('roles.restaurar'); // <-- Asegúrate de que tenga .restaurar aquí
         });
     });
 });
+
 /*
 |--------------------------------------------------------------------------
 | Rutas Públicas de Verificación (QR) - Sin Autenticación Requerida

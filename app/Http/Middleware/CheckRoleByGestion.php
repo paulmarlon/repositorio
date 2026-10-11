@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\GestionAcademica;
 use App\Models\ModelHasRoleGestion;
-use App\Models\User; // <-- 1. Importa el modelo User
+use App\Models\User;
 
 class CheckRoleByGestion
 {
@@ -16,13 +16,13 @@ class CheckRoleByGestion
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string  $role
+     * @param  string  $roles
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, string $role)
+    public function handle(Request $request, Closure $next, string $roles)
     {
         /** @var User $user */
-        $user = Auth::user(); // <-- 2. Añade la anotación de tipo aquí
+        $user = Auth::user();
 
         // 1. Validar si está autenticado y activo
         if (!$user || !$user->activo) {
@@ -42,17 +42,20 @@ class CheckRoleByGestion
             abort(403, 'No existe una gestión académica activa configurada en el sistema.');
         }
 
-        // 4. Verificar si el usuario tiene asignado el rol requerido para ESTA gestión específica usando Eloquent
+        // 4. Convertir los roles permitidos en un array (ej. "Administrador|Supervisor" -> ['Administrador', 'Supervisor'])
+        $rolesArray = explode('|', $roles);
+
+        // 5. Verificar si el usuario tiene asignado alguno de los roles requeridos para ESTA gestión específica
         $tieneRolEnGestion = ModelHasRoleGestion::where('model_id', $user->id)
             ->where('model_type', get_class($user))
             ->where('gestion_id', $gestionActiva->id)
-            ->whereHas('role', function ($query) use ($role) {
-                $query->where('name', $role);
+            ->whereHas('role', function ($query) use ($rolesArray) {
+                $query->whereIn('name', $rolesArray);
             })
             ->exists();
 
         if (!$tieneRolEnGestion) {
-            abort(403, 'No cuenta con el rol de "' . $role . '" autorizado para la gestión académica actual (' . $gestionActiva->anio . ' - ' . $gestionActiva->periodo . ').');
+            abort(403, 'No cuenta con los roles autorizados (' . $roles . ') para la gestión académica actual (' . $gestionActiva->anio . ' - ' . $gestionActiva->periodo . ').');
         }
 
         return $next($request);

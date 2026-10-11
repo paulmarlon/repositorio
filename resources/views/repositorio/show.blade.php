@@ -1,6 +1,14 @@
 @extends('adminlte::page')
 
+
 @section('title', $instituto->nombre_instituto ?? 'Sistema')
+
+@section('adminlte_css')
+    @parent
+    @if (isset($instituto) && $instituto->logo)
+        <link rel="icon" type="image/png" href="{{ asset('storage/' . $instituto->logo) }}">
+    @endif
+@endsection
 
 @section('adminlte_css')
     @parent
@@ -35,7 +43,8 @@
                     <ul class="list-unstyled mb-3">
                         <li class="mb-2">
                             <span class="text-muted small d-block">Autor</span>
-                            <strong class="font-weight-semibold">{{ $trabajo->autor->name ?? 'N/D' }}</strong>
+                            <strong class="font-weight-semibold">{{ $trabajo->autor->name }}
+                                {{ $trabajo->autor->paterno }} {{ $trabajo->autor->materno }}</strong>
                         </li>
                         <li class="mb-2">
                             <span class="text-muted small d-block">Gestión Académica</span>
@@ -53,7 +62,7 @@
                             <small class="text-muted">{{ $trabajo->categoria->nombre ?? '' }}</small>
                         </li>
                         <li class="mb-2">
-                            <span class="text-muted small d-block">Supervisor Evaluador</span>
+                            <span class="text-muted small d-block">Transcripción Calificación</span>
                             <strong
                                 class="font-weight-semibold">{{ $trabajo->supervisor->name ?? 'Pendiente / No asignado' }}</strong>
                         </li>

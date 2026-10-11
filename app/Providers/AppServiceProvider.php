@@ -31,8 +31,18 @@ class AppServiceProvider extends ServiceProvider
                 $instituto = ConfiguracionInstituto::first();
             }
 
+            if ($instituto) {
+                if ($instituto->nombre_instituto) {
+                    config(['adminlte.logo' => '<b>' . e($instituto->nombre_instituto) . '</b>']);
+                }
+                if ($instituto->logo) {
+                    config(['adminlte.logo_img' => 'storage/' . $instituto->logo]);
+                }
+            }
+
             $view->with('instituto', $instituto);
         });
+
         // Gate para Supervisor
         Gate::define('ver-supervisor', function (User $user) {
             return $user->hasRoleInActiveGestion('Supervisor');
@@ -44,9 +54,13 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Gate para Administrador global
-        // Gate para Administrador global (robusta)
         Gate::define('ver-admin', function (User $user) {
             return $user->hasRole('Administrador') || $user->hasRole('administrador') || $user->id === 1;
+        });
+
+        // Gate para Administrar Usuarios (Administrador global, ID 1 o Supervisor en gestión activa)
+        Gate::define('ver-usuarios', function (User $user) {
+            return $user->id === 1 || $user->hasRoleInActiveGestion('Administrador') || $user->hasRoleInActiveGestion('Supervisor');
         });
     }
 }

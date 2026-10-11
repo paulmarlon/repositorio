@@ -31,7 +31,8 @@
                         <tr>
                             <td class="text-wrap" style="max-width: 350px;"><strong>{{ $trabajo->titulo }}</strong></td>
                             <td>{{ $trabajo->autor->name ?? 'N/D' }}</td>
-                            <td><span class="badge bg-secondary">{{ $trabajo->gestion->nombre ?? 'N/D' }}</span></td>
+                            <td><span class="badge bg-secondary"> {{ $trabajo->gestion->anio }} -
+                                    {{ $trabajo->gestion->periodo }}</span></td>
                             <td>
                                 {{ $trabajo->tipoTrabajo->nombre ?? 'N/D' }} <br>
                                 <small class="text-muted">{{ $trabajo->categoria->nombre ?? '' }}</small>

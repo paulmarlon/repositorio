@@ -814,7 +814,7 @@ return [
         ],
 
         // MÓDULO ADMINISTRACIÓN
-        ['header' => 'ADMINISTRACIÓN', 'can' => 'ver-admin'],
+        ['header' => 'ADMINISTRACIÓN'],
         [
             'text' => 'Configuración',
             'route' => 'admin.configuracion.index',
@@ -848,11 +848,11 @@ return [
             'route' => 'admin.usuarios.index',
             'icon' => 'bi bi-people-fill',
             'active' => ['admin/usuarios*'],
-            'can' => 'ver-admin',
+            'can' => 'ver-usuarios', // Visible para Admin y Supervisor
         ],
 
         // MÓDULO SUPERVISIÓN
-        ['header' => 'SUPERVISIÓN', 'can' => 'ver-supervisor'],
+        ['header' => 'SUPERVISIÓN'],
         [
             'text' => 'Bandeja de Evaluación',
             'route' => 'supervisor.bandeja.index',
@@ -862,7 +862,7 @@ return [
         ],
 
         // MÓDULO ESTUDIANTE
-        ['header' => 'ESTUDIANTE', 'can' => 'ver-estudiante'],
+        ['header' => 'ESTUDIANTE'],
         [
             'text' => 'Mis Trabajos de Grado',
             'route' => 'estudiante.trabajos.index',
