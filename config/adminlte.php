@@ -1047,15 +1047,6 @@ return [
                                 window.location.href = "/login";
                             }
                         });
-
-                        window.addEventListener("focus", function() {
-                            fetch("/admin/configuracion", { method: "HEAD", redirect: "manual" })
-                                .then(response => {
-                                    if (response.status === 401 || response.status === 302 || response.type === "opaqueredirect") {
-                                        window.location.href = "/login";
-                                    }
-                                }).catch(() => {});
-                        });
                     ')
                 ],
             ],

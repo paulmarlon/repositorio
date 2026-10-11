@@ -69,6 +69,7 @@
                                     <form action="{{ route('admin.usuarios.toggle', $usuario->id) }}" method="POST"
                                         style="margin: 0;">
                                         @csrf
+                                        @method('PATCH')
                                         @if ($usuario->activo)
                                             <button type="submit" class="btn btn-sm btn-danger" title="Inhabilitar acceso">
                                                 <i class="bi bi-person-dash-fill"></i> Inhabilitar
