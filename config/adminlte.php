@@ -806,7 +806,7 @@ return [
         ],
         [
             'text' => 'Configuración',
-            'route' => 'configuracion.index',
+            'route' => 'admin.configuracion.index', // Actualizado con el prefijo admin.
             'icon' => 'bi bi-building',
         ],
         [

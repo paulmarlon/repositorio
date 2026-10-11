@@ -26,5 +26,9 @@ class DatabaseSeeder extends Seeder
             'avatar' => null, // Opcional, al estar en null usará las iniciales
             'activo' => true,
         ]);
+        $this->call([
+            RoleSeeder::class,
+            // Aquí tus otros seeders si los tienes
+        ]);
     }
 }

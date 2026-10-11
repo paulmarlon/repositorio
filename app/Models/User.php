@@ -74,4 +74,8 @@ class User extends Authenticatable
     {
         return '#'; // O la ruta a tu vista de perfil si la creas luego: route('profile')
     }
+    public function rolesPorGestion()
+    {
+        return $this->hasMany(ModelHasRoleGestion::class, 'model_id');
+    }
 }
