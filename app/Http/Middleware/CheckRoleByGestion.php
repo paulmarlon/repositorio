@@ -5,48 +5,54 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Models\GestionAcademica;
+use App\Models\ModelHasRoleGestion;
+use App\Models\User; // <-- 1. Importa el modelo User
 
 class CheckRoleByGestion
 {
-    public function handle(Request $request, Closure $next, string $roleName)
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @param  string  $role
+     * @return mixed
+     */
+    public function handle(Request $request, Closure $next, string $role)
     {
-        $user = Auth::user();
+        /** @var User $user */
+        $user = Auth::user(); // <-- 2. Añade la anotación de tipo aquí
 
-        if (!$user) {
-            abort(401);
+        // 1. Validar si está autenticado y activo
+        if (!$user || !$user->activo) {
+            Auth::logout();
+            return redirect()->route('login')->withErrors(['email' => 'Su cuenta está inactiva o no autenticada.']);
         }
 
-        // 1. EL ADMINISTRADOR PASA LIBREMENTE GLOBALMENTE
-        $esAdmin = DB::table('model_has_roles')
-            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-            ->where('model_has_roles.model_id', $user->id)
-            ->where('model_has_roles.model_type', get_class($user))
-            ->where('roles.name', 'Administrador')
-            ->exists();
-
-        if ($esAdmin) {
+        // 2. Si el usuario es Administrador global (según Spatie), tiene acceso total
+        if ($user->hasRole('Administrador')) {
             return $next($request);
         }
 
-        // 2. PARA OTROS ROLES (COMO SUPERVISOR O ESTUDIANTE), SÍ IMPORTA LA GESTIÓN ACTIVA
+        // 3. Obtener la gestión académica actualmente activa en el sistema
         $gestionActiva = GestionAcademica::where('activo', true)->first();
 
         if (!$gestionActiva) {
-            abort(403, 'No hay una gestión académica activa.');
+            abort(403, 'No existe una gestión académica activa configurada en el sistema.');
         }
 
-        $tieneRolEnGestion = DB::table('model_has_role_gestions')
-            ->join('roles', 'model_has_role_gestions.role_id', '=', 'roles.id')
-            ->where('model_has_role_gestions.model_id', $user->id)
-            ->where('model_has_role_gestions.model_type', get_class($user))
-            ->where('model_has_role_gestions.gestion_id', $gestionActiva->id)
-            ->where('roles.name', $roleName)
+        // 4. Verificar si el usuario tiene asignado el rol requerido para ESTA gestión específica usando Eloquent
+        $tieneRolEnGestion = ModelHasRoleGestion::where('model_id', $user->id)
+            ->where('model_type', get_class($user))
+            ->where('gestion_id', $gestionActiva->id)
+            ->whereHas('role', function ($query) use ($role) {
+                $query->where('name', $role);
+            })
             ->exists();
 
         if (!$tieneRolEnGestion) {
-            abort(403, 'No tienes autorización para acceder a este módulo en la gestión académica actual.');
+            abort(403, 'No cuenta con el rol de "' . $role . '" autorizado para la gestión académica actual (' . $gestionActiva->anio . ' - ' . $gestionActiva->periodo . ').');
         }
 
         return $next($request);

@@ -5,7 +5,9 @@ use App\Http\Controllers\ConfiguracionInstitutoController;
 use App\Http\Controllers\TipoTrabajoController;
 use App\Http\Controllers\GestionAcademicaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RepositorioController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\TrabajoGradoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Middleware\RequireTwoFactor;
@@ -42,6 +44,25 @@ Route::middleware(['auth', RequireTwoFactor::class])->group(function () {
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::put('/update', [ProfileController::class, 'update'])->name('update');
+    });
+    // Módulo de Trabajos de Grado (Estudiante)
+    Route::middleware(['role.gestion:Usuario'])->prefix('estudiante')->name('estudiante.')->group(function () {
+        Route::get('/trabajos', [TrabajoGradoController::class, 'indexEstudiante'])->name('trabajos.index');
+        Route::get('/trabajos/create', [TrabajoGradoController::class, 'create'])->name('trabajos.create');
+        Route::post('/trabajos', [TrabajoGradoController::class, 'store'])->name('trabajos.store');
+        Route::delete('/trabajos/{trabajo}', [TrabajoGradoController::class, 'destroy'])->name('trabajos.destroy');
+    });
+
+    // Módulo de Evaluación de Trabajos (Supervisor)
+    Route::middleware(['role.gestion:Supervisor'])->prefix('supervisor')->name('supervisor.')->group(function () {
+        Route::get('/bandeja', [TrabajoGradoController::class, 'indexSupervisor'])->name('bandeja.index');
+        Route::patch('/trabajos/{trabajo}/evaluar', [TrabajoGradoController::class, 'evaluar'])->name('trabajos.evaluar');
+    });
+    // Módulo de Repositorio Global y Visor Protegido
+    Route::prefix('repositorio')->name('repositorio.')->group(function () {
+        Route::get('/', [RepositorioController::class, 'index'])->name('index');
+        Route::get('/detalle/{trabajo}', [RepositorioController::class, 'show'])->name('show');
+        Route::get('/detalle/{trabajo}/visor', [RepositorioController::class, 'visor'])->name('visor');
     });
 
     // Administrative Panel

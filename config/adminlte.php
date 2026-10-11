@@ -804,109 +804,73 @@ return [
             'type' => 'sidebar-menu-search',
             'text' => 'search',
         ],
+        // MÓDULO REPOSITORIO GLOBAL
+        ['header' => 'REPOSITORIO INSTITUCIONAL'],
+        [
+            'text' => 'Catálogo de Trabajos',
+            'route' => 'repositorio.index',
+            'icon' => 'bi bi-journal-richtext',
+            'active' => ['repositorio*'],
+        ],
+
+        // MÓDULO ADMINISTRACIÓN
+        ['header' => 'ADMINISTRACIÓN', 'can' => 'ver-admin'],
         [
             'text' => 'Configuración',
-            'route' => 'admin.configuracion.index', // Actualizado con el prefijo admin.
+            'route' => 'admin.configuracion.index',
             'icon' => 'bi bi-building',
+            'active' => ['admin/configuracion*'],
+            'can' => 'ver-admin',
         ],
         [
             'text' => 'Gestiones Académicas',
             'route' => 'admin.gestiones.index',
             'icon' => 'bi bi-calendar-event',
             'active' => ['admin/gestiones*'],
+            'can' => 'ver-admin',
         ],
         [
             'text' => 'Tipos de Trabajo',
             'route' => 'admin.tipo-trabajos.index',
             'icon' => 'bi bi-folder2-open',
             'active' => ['admin/tipo-trabajos*'],
+            'can' => 'ver-admin',
         ],
         [
             'text' => 'Categorías',
             'route' => 'admin.categorias.index',
             'icon' => 'bi bi-tags-fill',
             'active' => ['admin/categorias*'],
+            'can' => 'ver-admin',
         ],
         [
             'text' => 'Usuarios',
             'route' => 'admin.usuarios.index',
             'icon' => 'bi bi-people-fill',
             'active' => ['admin/usuarios*'],
+            'can' => 'ver-admin',
         ],
+
+        // MÓDULO SUPERVISIÓN
+        ['header' => 'SUPERVISIÓN', 'can' => 'ver-supervisor'],
         [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'bi bi-file-earmark',
-            'label' => 4,
-            'label_color' => 'success',
+            'text' => 'Bandeja de Evaluación',
+            'route' => 'supervisor.bandeja.index',
+            'icon' => 'bi bi-check2-square',
+            'active' => ['supervisor/bandeja*'],
+            'can' => 'ver-supervisor',
         ],
-        ['header' => 'account_settings'],
+
+        // MÓDULO ESTUDIANTE
+        ['header' => 'ESTUDIANTE', 'can' => 'ver-estudiante'],
         [
-            'text' => 'profile',
-            'url' => 'admin/settings',
-            'icon' => 'bi bi-person',
-        ],
-        [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'bi bi-lock',
-        ],
-        [
-            'text' => 'multilevel',
-            'icon' => 'bi bi-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-            ],
-        ],
-        ['header' => 'labels'],
-        [
-            'text' => 'important',
-            'icon_color' => 'danger',
-            'url' => '#',
-        ],
-        [
-            'text' => 'warning',
-            'icon_color' => 'warning',
-            'url' => '#',
-        ],
-        [
-            'text' => 'information',
-            'icon_color' => 'info',
-            'url' => '#',
+            'text' => 'Mis Trabajos de Grado',
+            'route' => 'estudiante.trabajos.index',
+            'icon' => 'bi bi-journal-bookmark-fill',
+            'active' => ['estudiante/trabajos*'],
+            'can' => 'ver-estudiante',
         ],
     ],
-
     /*
     |--------------------------------------------------------------------------
     | Menu Filters

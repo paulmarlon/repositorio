@@ -3,80 +3,82 @@
 @section('title', 'Postular Trabajo de Grado')
 
 @section('content_header')
-    <h1>Postular Trabajo de Grado</h1>
+    <div class="container-fluid">
+        <h1>Postular Nuevo Trabajo de Grado</h1>
+    </div>
 @stop
 
 @section('content')
-    <div class="card">
-        <div class="card-body">
+    <div class="container-fluid">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Formulario de Registro (Gestión: {{ $gestionActiva->anio }} -
+                    {{ $gestionActiva->periodo }})</h3>
+            </div>
             <form action="{{ route('estudiante.trabajos.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                <div class="card-body">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
-                <input type="hidden" name="gestion_id" value="{{ $gestionActiva->id }}">
-
-                <div class="mb-3">
-                    <label for="titulo" class="form-label">Título del Trabajo</label>
-                    <input type="text" class="form-control @error('titulo') is-invalid @enderror" id="titulo"
-                        name="titulo" value="{{ old('titulo') }}" required>
-                    @error('titulo')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="tipo_id" class="form-label">Tipo de Trabajo</label>
-                        <select class="form-select @error('tipo_id') is-invalid @enderror" id="tipo_id" name="tipo_id"
+                    <div class="form-group">
+                        <label for="titulo">Título del Trabajo</label>
+                        <input type="text" name="titulo" class="form-control" id="titulo" value="{{ old('titulo') }}"
                             required>
-                            <option value="">Seleccione un tipo...</option>
-                            @foreach ($tipos as $tipo)
-                                <option value="{{ $tipo->id }}" {{ old('tipo_id') == $tipo->id ? 'selected' : '' }}>
-                                    {{ $tipo->nombre }}</option>
-                            @endforeach
-                        </select>
-                        @error('tipo_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
                     </div>
 
-                    <div class="col-md-6 mb-3">
-                        <label for="categoria_id" class="form-label">Categoría</label>
-                        <select class="form-select @error('categoria_id') is-invalid @enderror" id="categoria_id"
-                            name="categoria_id" required>
-                            <option value="">Seleccione una categoría...</option>
-                            @foreach ($categorias as $categoria)
-                                <option value="{{ $categoria->id }}"
-                                    {{ old('categoria_id') == $categoria->id ? 'selected' : '' }}>{{ $categoria->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('categoria_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="tipo_id">Tipo de Trabajo</label>
+                                <select name="tipo_id" id="tipo_id" class="form-control" required>
+                                    <option value="">Seleccione...</option>
+                                    @foreach ($tiposTrabajo as $tipo)
+                                        <option value="{{ $tipo->id }}">{{ $tipo->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="categoria_id">Categoría</label>
+                                <select name="categoria_id" id="categoria_id" class="form-control" required>
+                                    <option value="">Seleccione...</option>
+                                    @foreach ($categorias as $categoria)
+                                        <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="resumen">Resumen / Descripción</label>
+                        <textarea name="resumen" id="resumen" rows="4" class="form-control" required>{{ old('resumen') }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="archivo">Documento PDF (Máx. 10MB)</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" name="archivo" class="custom-file-input" id="archivo"
+                                    accept="application/pdf" required>
+                                <label class="custom-file-label" for="archivo">Seleccionar archivo PDF</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="resumen" class="form-label">Resumen</label>
-                    <textarea class="form-control @error('resumen') is-invalid @enderror" id="resumen" name="resumen" rows="4"
-                        required>{{ old('resumen') }}</textarea>
-                    @error('resumen')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-3">
-                    <label for="archivo_pdf" class="form-label">Documento en PDF (Máx. 10MB)</label>
-                    <input type="file" class="form-control @error('archivo_pdf') is-invalid @enderror" id="archivo_pdf"
-                        name="archivo_pdf" accept="application/pdf" required>
-                    @error('archivo_pdf')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="d-flex justify-content-end">
-                    <a href="{{ route('estudiante.trabajos.index') }}" class="btn btn-secondary me-2">Cancelar</a>
-                    <button type="submit" class="btn btn-success">Guardar y Postular</button>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Enviar Postulación</button>
+                    <a href="{{ route('estudiante.trabajos.index') }}" class="btn btn-default">Cancelar</a>
                 </div>
             </form>
         </div>

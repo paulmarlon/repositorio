@@ -10,6 +10,8 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
+use App\Models\GestionAcademica;
+use App\Models\ModelHasRoleGestion;
 
 
 class User extends Authenticatable
@@ -77,5 +79,25 @@ class User extends Authenticatable
     public function rolesPorGestion()
     {
         return $this->hasMany(ModelHasRoleGestion::class, 'model_id');
+    }
+    public function hasRoleInActiveGestion(string $roleName): bool
+    {
+        // El Administrador global siempre tiene acceso total
+        if ($this->hasRole('Administrador')) {
+            return true;
+        }
+
+        $gestionActiva = GestionAcademica::where('activo', true)->first();
+        if (!$gestionActiva) {
+            return false;
+        }
+
+        return ModelHasRoleGestion::where('model_id', $this->id)
+            ->where('model_type', get_class($this))
+            ->where('gestion_id', $gestionActiva->id)
+            ->whereHas('role', function ($query) use ($roleName) {
+                $query->where('name', $roleName);
+            })
+            ->exists();
     }
 }
