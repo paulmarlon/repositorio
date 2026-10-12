@@ -18,8 +18,11 @@ class UserController extends Controller
 
     public function toggleActive(User $usuario)
     {
+        /** @var User $currentUser */
+        $currentUser = auth()->user();
+
         // SEGURIDAD: Un supervisor no puede desactivar/activar a un Administrador
-        if (!auth()->user()->hasRole('Administrador') && $usuario->hasRole('Administrador')) {
+        if (!$currentUser->hasRole('Administrador') && $usuario->hasRole('Administrador')) {
             return redirect()->route('admin.usuarios.index')
                 ->with('mensaje', 'Acción no permitida: No puedes modificar el estado de un Administrador.')
                 ->with('icon', 'error');
@@ -54,14 +57,17 @@ class UserController extends Controller
             'gestion_id' => 'required|exists:gestion_academicas,id',
         ]);
 
+        /** @var User $currentUser */
+        $currentUser = auth()->user();
+
         // SEGURIDAD: Si el usuario a modificar es Administrador y el actual NO es admin, bloquear
-        if (!auth()->user()->hasRole('Administrador') && $usuario->hasRole('Administrador')) {
+        if (!$currentUser->hasRole('Administrador') && $usuario->hasRole('Administrador')) {
             return back()->with('mensaje', 'No tienes permisos para modificar los roles de un Administrador.')->with('icon', 'error');
         }
 
         // SEGURIDAD: Si el rol que intenta asignar es Administrador y el actual NO es admin, bloquear
         $roleAAsignar = Role::findOrFail($request->role_id);
-        if (!auth()->user()->hasRole('Administrador') && $roleAAsignar->name === 'Administrador') {
+        if (!$currentUser->hasRole('Administrador') && $roleAAsignar->name === 'Administrador') {
             return back()->with('mensaje', 'No tienes autorización para asignar el rol de Administrador.')->with('icon', 'error');
         }
 

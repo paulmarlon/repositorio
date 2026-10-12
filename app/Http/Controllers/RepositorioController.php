@@ -21,7 +21,12 @@ class RepositorioController extends Controller
             ->latest()
             ->get();
 
-        return view('repositorio.index', compact('trabajos'));
+        // Obtenemos los catálogos para los filtros de selección
+        $gestiones = \App\Models\GestionAcademica::all();
+        $tiposTrabajo = \App\Models\TipoTrabajo::all();
+        $categorias = \App\Models\Categoria::all();
+
+        return view('repositorio.index', compact('trabajos', 'gestiones', 'tiposTrabajo', 'categorias'));
     }
 
     /**

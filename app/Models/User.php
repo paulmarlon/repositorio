@@ -82,8 +82,8 @@ class User extends Authenticatable
     }
     public function hasRoleInActiveGestion(string $roleName): bool
     {
-        // 1. Si el usuario es Administrador global por Spatie, permitir acceso total
-        if ($this->hasRole('Administrador')) {
+        // 1. Si el usuario es Administrador global por Spatie o es el ID 1, permitir acceso total siempre
+        if ($this->hasRole('Administrador') || $this->hasRole('administrador') || $this->id === 1) {
             return true;
         }
 
@@ -92,7 +92,7 @@ class User extends Authenticatable
             return false;
         }
 
-        // 2. Verificar en la tabla de roles por gestión
+        // 2. Verificar en la tabla de roles por gestión para otros roles (como Supervisor)
         return ModelHasRoleGestion::where('model_id', $this->id)
             ->where('model_type', get_class($this))
             ->where('gestion_id', $gestionActiva->id)

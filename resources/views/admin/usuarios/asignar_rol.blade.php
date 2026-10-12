@@ -1,6 +1,13 @@
 @extends('adminlte::page')
 
-@section('title', 'Asignar Roles por Gestión')
+@section('title', $instituto->nombre_instituto ?? 'Sistema')
+
+@section('adminlte_css')
+    @parent
+    @if (isset($instituto) && $instituto->logo)
+        <link rel="icon" type="image/png" href="{{ asset('storage/' . $instituto->logo) }}">
+    @endif
+@endsection
 
 @section('content_header')
     <h1><i class="bi bi-person-badge-fill"></i> Asignar Roles: <b>{{ $usuario->nombres }} {{ $usuario->paterno }}
