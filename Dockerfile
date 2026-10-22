@@ -21,6 +21,11 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 RUN php artisan vendor:publish --provider="JeroenNoten\LaravelAdminLte\AdminLteServiceProvider" --tag=assets --force
 RUN npm install && npm run build
 
+# Limpiar y cachear configuraciones de Laravel para producción
+RUN php artisan config:clear \
+    && php artisan route:clear \
+    && php artisan view:clear
+
 # Permisos para storage y bootstrap/cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
