@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 # Instalar dependencias del sistema y Composer
 RUN apt-get update && apt-get install -y libpq-dev zip unzip git curl
