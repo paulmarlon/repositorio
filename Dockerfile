@@ -11,7 +11,6 @@ COPY . /var/www/html
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction
-RUN php artisan vendor:publish --provider="JeroenNoten\LaravelAdminLte\AdminLteServiceProvider" --tag=assets --force
 
 RUN php artisan config:clear \
     && php artisan route:clear \
