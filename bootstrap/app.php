@@ -12,6 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Confiar en el proxy de Render para solucionar el contenido mixto HTTP/HTTPS
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'role.gestion' => \App\Http\Middleware\CheckRoleByGestion::class,
         ]);
