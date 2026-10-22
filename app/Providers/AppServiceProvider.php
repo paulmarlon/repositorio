@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use App\Models\User;
+// 1. Agregamos estas dos importaciones para el Listener
+use Illuminate\Support\Facades\Event;
+use Illuminate\Auth\Events\Login;
+use App\Listeners\LogSuccessfulLogin;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +28,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // 2. Registramos el evento de inicio de sesión aquí
+        Event::listen(
+            Login::class,
+            LogSuccessfulLogin::class
+        );
+
         View::composer('*', function ($view) {
             $instituto = null;
 

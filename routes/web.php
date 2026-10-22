@@ -9,6 +9,7 @@ use App\Http\Controllers\RepositorioController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\TrabajoGradoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DeviceSessionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Middleware\RequireTwoFactor;
 use Illuminate\Support\Facades\Auth;
@@ -89,6 +90,9 @@ Route::middleware(['auth', RequireTwoFactor::class])->group(function () {
         Route::post('categorias/{id}/restaurar', [CategoriaController::class, 'restore'])->name('categorias.restaurar');
         Route::resource('categorias', CategoriaController::class);
 
+        // Sesiones de Dispositivos
+        Route::resource('sesiones', DeviceSessionController::class)->only(['index', 'destroy']);
+
         // Usuarios y Asignación de Roles por Gestión (Acceso para Administrador y Supervisor)
         Route::middleware(['role.gestion:Administrador|Supervisor'])->prefix('usuarios')->name('usuarios.')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('index');
@@ -98,7 +102,7 @@ Route::middleware(['auth', RequireTwoFactor::class])->group(function () {
             Route::delete('/roles/{id}', [UserController::class, 'eliminarRolGestion'])->name('eliminar.rol');
 
             Route::get('roles/papelera', [UserController::class, 'papeleraRoles'])->name('roles.papelera');
-            Route::post('roles/{id}/restaurar', [UserController::class, 'restaurarRol'])->name('roles.restaurar'); // <-- Asegúrate de que tenga .restaurar aquí
+            Route::post('roles/{id}/restaurar', [UserController::class, 'restaurarRol'])->name('roles.restaurar');
         });
     });
 });

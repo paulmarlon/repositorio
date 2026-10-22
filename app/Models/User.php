@@ -101,4 +101,8 @@ class User extends Authenticatable
             })
             ->exists();
     }
+    public function deviceSessions()
+    {
+        return $this->hasMany(DeviceSession::class);
+    }
 }

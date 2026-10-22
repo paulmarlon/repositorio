@@ -850,6 +850,13 @@ return [
             'active' => ['admin/usuarios*'],
             'can' => 'ver-usuarios', // Visible para Admin y Supervisor
         ],
+        [
+            'text' => 'Sesiones de Dispositivos',
+            'route' => 'admin.sesiones.index',
+            'icon' => 'bi bi-laptop',
+            'active' => ['admin/sesiones*'],
+            'can' => 'ver-admin',
+        ],
 
         // MÓDULO SUPERVISIÓN
         ['header' => 'SUPERVISIÓN'],

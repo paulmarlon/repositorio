@@ -120,3 +120,18 @@ Table trabajos_grado {
     created_at timestamp
     updated_at timestamp
 }
+
+// ==========================================
+// FASE 5: SEGURIDAD Y DISPOSITIVOS
+// ==========================================
+
+Table device_sessions {
+    id bigint [primary key, increment]
+    user_id integer [not null, ref: > users.id, note: "Usuario dueño de la sesión"]
+    ip_address varchar(45) [null, note: "Dirección IP"]
+    user_agent text [null, note: "Navegador y sistema operativo"]
+    device_type varchar(50) [null, note: "Escritorio, Móvil, etc."]
+    last_activity timestamp [not null]
+    created_at timestamp
+    updated_at timestamp
+}
