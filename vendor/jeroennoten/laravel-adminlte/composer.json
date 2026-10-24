@@ -1,0 +1,74 @@
+{
+  "name": "jeroennoten/laravel-adminlte",
+  "description": "Easy AdminLTE v4 integration with Laravel",
+  "keywords": [
+    "laravel",
+    "adminlte",
+    "admin",
+    "administrator",
+    "dashboard",
+    "bootstrap5",
+    "blade"
+  ],
+  "homepage": "https://jeroennoten.github.io/Laravel-AdminLTE",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jeroen Noten",
+      "email": "jeroennoten@me.com",
+      "role": "Creator"
+    },
+    {
+      "name": "Diego Smania",
+      "email": "diego.smania@gmail.com",
+      "role": "Maintainer"
+    },
+    {
+      "name": "Florian Ressel",
+      "email": "florian@genxtreme.de",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/jeroennoten/Laravel-AdminLTE/issues",
+    "source": "https://github.com/jeroennoten/Laravel-AdminLTE",
+    "docs": "https://jeroennoten.github.io/Laravel-AdminLTE"
+  },
+  "autoload": {
+    "psr-4": {
+      "JeroenNoten\\LaravelAdminLte\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/TestCase.php",
+      "tests/Console/CommandTestCase.php"
+    ]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "JeroenNoten\\LaravelAdminLte\\AdminLteServiceProvider"
+      ]
+    }
+  },
+  "require": {
+    "php": "^8.2",
+    "laravel/framework": "^12.0|^13.0",
+    "almasaeed2010/adminlte": "^4.9"
+  },
+  "require-dev": {
+    "larastan/larastan": "^3.0",
+    "laravel/ui": "^4.6",
+    "orchestra/testbench": "^10.0|^11.0",
+    "phpunit/phpunit": "^11.0|^12.0"
+  },
+  "scripts": {
+    "analyse": "phpstan analyse --no-progress",
+    "test": "phpunit --no-coverage",
+    "test:coverage": "phpunit --coverage-text"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}

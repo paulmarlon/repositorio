@@ -1,0 +1,287 @@
+<?php
+
+namespace JeroenNoten\LaravelAdminLte\Layout;
+
+/**
+ * Holds the vocabulary of the underlying AdminLTE distribution.
+ *
+ * Every class name and every token that AdminLTE defines is declared here, so
+ * an update of the template only requires changing this file instead of the
+ * views and the helpers that consume them.
+ */
+class Tokens
+{
+    /**
+     * The class of the element that wraps the whole layout.
+     *
+     * @var string
+     */
+    public const WRAPPER = 'app-wrapper';
+
+    /**
+     * The class of the main sidebar element.
+     *
+     * @var string
+     */
+    public const SIDEBAR = 'app-sidebar';
+
+    /**
+     * The class of the content wrapper element.
+     *
+     * @var string
+     */
+    public const CONTENT_WRAPPER = 'app-main';
+
+    /**
+     * The class that fixes the sidebar to the viewport.
+     *
+     * @var string
+     */
+    public const LAYOUT_FIXED = 'layout-fixed';
+
+    /**
+     * The class that fixes the navbar to the viewport.
+     *
+     * @var string
+     */
+    public const FIXED_NAVBAR = 'fixed-header';
+
+    /**
+     * The class that fixes the footer to the viewport.
+     *
+     * @var string
+     */
+    public const FIXED_FOOTER = 'fixed-footer';
+
+    /**
+     * The prefix of the classes that define the sidebar expand breakpoint.
+     *
+     * @var string
+     */
+    public const SIDEBAR_EXPAND_PREFIX = 'sidebar-expand-';
+
+    /**
+     * The class that enables the collapsed mini sidebar mode.
+     *
+     * @var string
+     */
+    public const SIDEBAR_MINI = 'sidebar-mini';
+
+    /**
+     * The class that starts the sidebar on its collapsed state.
+     *
+     * @var string
+     */
+    public const SIDEBAR_COLLAPSE = 'sidebar-collapse';
+
+    /**
+     * The class that keeps a collapsed sidebar collapsed on mouse hover.
+     *
+     * @var string
+     */
+    public const SIDEBAR_WITHOUT_HOVER = 'sidebar-without-hover';
+
+    /**
+     * The class of the sidebar navigation menu element.
+     *
+     * @var string
+     */
+    public const SIDEBAR_MENU = 'sidebar-menu';
+
+    /**
+     * The base class of any navigation menu (provided by Bootstrap).
+     *
+     * @var string
+     */
+    public const NAV = 'nav';
+
+    /**
+     * The class that stacks the navigation items vertically (Bootstrap).
+     *
+     * @var string
+     */
+    public const NAV_COLUMN = 'flex-column';
+
+    /**
+     * The class that applies the compact style to the sidebar menu.
+     *
+     * @var string
+     */
+    public const NAV_COMPACT = 'nav-compact';
+
+    /**
+     * The class that indents the submenus of the sidebar menu.
+     *
+     * @var string
+     */
+    public const NAV_INDENT = 'nav-indent';
+
+    /**
+     * The class that applies the pills style to the sidebar menu (Bootstrap).
+     *
+     * @var string
+     */
+    public const NAV_PILLS = 'nav-pills';
+
+    /**
+     * The attribute that holds the color mode of an element.
+     *
+     * @var string
+     */
+    public const COLOR_MODE_ATTRIBUTE = 'data-bs-theme';
+
+    /**
+     * The attribute that disables the AdminLTE color mode plugin.
+     *
+     * @var string
+     */
+    public const COLOR_MODE_DISABLED_ATTRIBUTE = 'data-lte-color-mode';
+
+    /**
+     * The attribute that enables the persistence of the sidebar state.
+     *
+     * @var string
+     */
+    public const SIDEBAR_PERSISTENCE_ATTRIBUTE = 'data-enable-persistence';
+
+    /**
+     * The attribute that holds the breakpoint (in pixels) where the sidebar
+     * switches between its desktop and its mobile behavior.
+     *
+     * @var string
+     */
+    public const SIDEBAR_BREAKPOINT_ATTRIBUTE = 'data-sidebar-breakpoint';
+
+    /**
+     * The breakpoints supported by the sidebar expand classes.
+     *
+     * @var array
+     */
+    public const SIDEBAR_EXPAND_BREAKPOINTS = ['sm', 'md', 'lg', 'xl', 'xxl'];
+
+    /**
+     * The viewport width, in pixels, at which each of the supported sidebar
+     * expand breakpoints starts. AdminLTE hardcodes these widths in the media
+     * queries of its stylesheet, so they are the only breakpoints the sidebar
+     * layout can actually use.
+     *
+     * @var array
+     */
+    public const SIDEBAR_EXPAND_WIDTHS = [
+        'sm' => 576,
+        'md' => 768,
+        'lg' => 992,
+        'xl' => 1200,
+        'xxl' => 1400,
+    ];
+
+    /**
+     * The expand breakpoint the AdminLTE push menu plugin assumes when the
+     * sidebar publishes no breakpoint of its own.
+     *
+     * @var string
+     */
+    public const SIDEBAR_DEFAULT_EXPAND = 'lg';
+
+    /**
+     * The supported color modes.
+     *
+     * @var array
+     */
+    public const COLOR_MODES = ['light', 'dark', 'auto'];
+
+    /**
+     * The class that reduces the dimensions of the layout elements.
+     *
+     * @var string
+     */
+    public const COMPACT_MODE = 'compact-mode';
+
+    /**
+     * The attribute that remaps the primary color of the palette.
+     *
+     * @var string
+     */
+    public const PALETTE_PRIMARY_ATTRIBUTE = 'data-lte-primary';
+
+    /**
+     * The attribute that applies the contrast correction of the palette.
+     *
+     * @var string
+     */
+    public const PALETTE_CONTRAST_ATTRIBUTE = 'data-lte-contrast';
+
+    /**
+     * The attribute that tunes the printed output of the layout.
+     *
+     * @var string
+     */
+    public const PRINT_ATTRIBUTE = 'data-lte-print';
+
+    /**
+     * The breakpoint tokens accepted by the legacy 'sidebar_mini' option.
+     *
+     * @var array
+     */
+    public const LEGACY_SIDEBAR_MINI_TOKENS = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl'];
+
+    /**
+     * Makes the class that expands the sidebar on the given breakpoint.
+     *
+     * @param  string  $breakpoint  One of the supported breakpoints
+     * @return string|null
+     */
+    public static function sidebarExpand($breakpoint): ?string
+    {
+        if (! in_array($breakpoint, self::SIDEBAR_EXPAND_BREAKPOINTS, true)) {
+            return null;
+        }
+
+        return self::SIDEBAR_EXPAND_PREFIX.$breakpoint;
+    }
+
+    /**
+     * Resolves a sidebar breakpoint given as a viewport width in pixels to the
+     * name of the expand breakpoint that covers it. AdminLTE reads the width
+     * back from the stylesheet of the expand class, so an arbitrary width can
+     * not be honored: it would leave the script and the media queries
+     * disagreeing about where the sidebar turns into an overlay. The width is
+     * therefore matched against the ones AdminLTE ships, and both the exact
+     * value and the '.98' upper bound of the media query are accepted.
+     *
+     * @param  mixed  $width  A viewport width in pixels
+     * @return string|null
+     */
+    public static function sidebarBreakpointName($width): ?string
+    {
+        if (! is_numeric($width)) {
+            return null;
+        }
+
+        foreach (self::SIDEBAR_EXPAND_WIDTHS as $name => $value) {
+            if ((int) ceil((float) $width) === $value) {
+                return $name;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets the viewport width, in pixels, at or below which the sidebar of the
+     * given expand breakpoint turns into an overlay. This is the upper bound
+     * of the media query AdminLTE ships for that breakpoint, and the very
+     * value its stylesheet publishes to the push menu plugin.
+     *
+     * @param  string  $breakpoint  One of the supported breakpoints
+     * @return string|null
+     */
+    public static function sidebarBreakpointWidth($breakpoint): ?string
+    {
+        if (! isset(self::SIDEBAR_EXPAND_WIDTHS[$breakpoint])) {
+            return null;
+        }
+
+        return number_format(self::SIDEBAR_EXPAND_WIDTHS[$breakpoint] - 0.02, 2, '.', '');
+    }
+}
