@@ -64,9 +64,6 @@ class RepositorioController extends Controller
     /**
      * Visor protegido tipo Scribd (Renderiza el PDF sin exponer la ruta física directa).
      */
-    /**
-     * Visor protegido tipo Scribd (Renderiza el PDF sin exponer la ruta física directa).
-     */
     public function visor(TrabajoGrado $trabajo)
     {
         /** @var User $user */
@@ -90,12 +87,19 @@ class RepositorioController extends Controller
         // Obtenemos la ruta física absoluta del archivo
         $path = Storage::disk($disk)->path($trabajo->archivo_url);
 
-        // Servimos el archivo con los headers adecuados para visualización en el navegador
-        return response()->file($path, [
+        // Usamos la fecha de creación del trabajo (o la actual si estuviera vacía)
+        $fechaHora = $trabajo->created_at ? $trabajo->created_at->format('Ymd_His') : date('Ymd_His');
+
+        // Nombre limpio: certificado_[Nro de Trabajo]_[DateTime].pdf
+        $nombreAmigable = 'certificado_' . $trabajo->id . '_' . $fechaHora . '.pdf';
+
+        // Servimos el archivo usando download con cabecera inline para forzar el nombre amigable en el visor/descarga
+        return response()->download($path, $nombreAmigable, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . basename($path) . '"',
+            'Content-Disposition' => 'inline; filename="' . $nombreAmigable . '"',
         ]);
     }
+
     /**
      * Verificación pública del trabajo de grado vía Código QR (Sin login requerido).
      */

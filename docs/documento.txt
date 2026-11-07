@@ -1,0 +1,19 @@
+DB_CONNECTION=pgsql
+DB_HOST=db.tu-proyecto.supabase.co
+DB_PORT=5432
+DB_DATABASE=postgres
+DB_USERNAME=postgres
+DB_PASSWORD=tu_password_de_supabase
+
+SUPABASE_URL=https://tu-proyecto.supabase.co
+SUPABASE_KEY=tu_anon_o_service_role_key
+
+
+
+project url  https://vpezvexgpmlokopgfilr.supabase.co
+publishable key sb_publishable_-p4A_GNE3E6x916Q26l_jw_Qteb_Gur
+Direct conection string postgresql://postgres:[YOUR-PASSWORD]@db.vpezvexgpmlokopgfilr.supabase.co:5432/postgres
+cli setup commands 
+supabase login
+supabase init
+supabase link --project-ref vpezvexgpmlokopgfilr

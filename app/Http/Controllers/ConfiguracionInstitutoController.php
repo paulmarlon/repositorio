@@ -35,11 +35,20 @@ class ConfiguracionInstitutoController extends Controller
         $instituto->latitud = $request->latitud;
         $instituto->longitud = $request->longitud;
 
-        if ($request->hasFile('logo')) {
+if ($request->hasFile('logo')) {
             if ($instituto->logo) {
                 Storage::disk('public')->delete($instituto->logo);
             }
-            $instituto->logo = $request->file('logo')->store('instituto', 'public');
+
+            // 1. Obtenemos la extensión original del archivo (ej. png, jpg)
+            $extension = $request->file('logo')->getClientOriginalExtension();
+
+            // 2. Construimos un nombre personalizado limpio (ej: logo_2026-11-04_191300.png)
+            // O usando un identificador de tiempo preciso para evitar duplicados exactos
+            $nombrePersonalizado = 'logo_' . date('Ymd_His') . '_' . uniqid() . '.' . $extension;
+
+            // 3. Guardamos el archivo especificando la carpeta y el nombre personalizado
+            $instituto->logo = $request->file('logo')->storeAs('instituto', $nombrePersonalizado, 'public');
         }
 
         $instituto->save();

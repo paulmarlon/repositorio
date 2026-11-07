@@ -32,11 +32,20 @@ class ProfileController extends Controller
         $user->paterno = $request->paterno;
         $user->materno = $request->materno;
 
-        if ($request->hasFile('avatar')) {
+if ($request->hasFile('avatar')) {
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }
-            $user->avatar = $request->file('avatar')->store('avatars', 'public');
+
+            // 1. Obtenemos la extensión original del archivo (ej. jpg, png)
+            $extension = $request->file('avatar')->getClientOriginalExtension();
+
+            // 2. Construimos un nombre personalizado combinando el ID del usuario, la fecha y un ID único
+            // Ejemplo resultante: avatar_user_5_20261104_192000_6543abc.jpg
+            $nombrePersonalizado = 'avatar_user_' . $user->id . '_' . date('Ymd_His') . '_' . uniqid() . '.' . $extension;
+
+            // 3. Guardamos usando storeAs para mantener la compatibilidad agnóstica (Local/S3)
+            $user->avatar = $request->file('avatar')->storeAs('avatars', $nombrePersonalizado, 'public');
         }
 
         $user->save();

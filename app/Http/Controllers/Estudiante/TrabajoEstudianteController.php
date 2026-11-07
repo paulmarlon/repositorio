@@ -50,6 +50,19 @@ class TrabajoEstudianteController extends Controller
 
         $path = $request->file('archivo_pdf')->store('trabajos', 'public');
 
+// ... validaciones previas ...
+
+        if ($request->hasFile('archivo_pdf')) {
+            // 1. Obtenemos la extensión (debería ser pdf por la validación)
+            $extension = $request->file('archivo_pdf')->getClientOriginalExtension();
+
+            // 2. Construimos un nombre personalizado (ej: trabajo_autor_12_20261104_193500_6543abc.pdf)
+            $nombrePersonalizado = 'trabajo_autor_' . Auth::id() . '_' . date('Ymd_His') . '_' . uniqid() . '.' . $extension;
+
+            // 3. Guardamos usando storeAs para mantener la compatibilidad agnóstica (Local/S3)
+            $path = $request->file('archivo_pdf')->storeAs('trabajos', $nombrePersonalizado, 'public');
+        }
+
         TrabajoGrado::create([
             'autor_id' => Auth::id(),
             'tipo_id' => $request->tipo_id,
@@ -57,7 +70,7 @@ class TrabajoEstudianteController extends Controller
             'gestion_id' => $request->gestion_id,
             'titulo' => $request->titulo,
             'resumen' => $request->resumen,
-            'archivo_url' => $path,
+            'archivo_url' => $path ?? null, // Aseguramos que tome la ruta generada
             'estado' => 'pendiente',
         ]);
 
