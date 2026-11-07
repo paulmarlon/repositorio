@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str; // <-- 1. Importante: Importar Str
 
 class ProfileController extends Controller
 {
@@ -36,7 +37,14 @@ class ProfileController extends Controller
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }
-            $user->avatar = $request->file('avatar')->store('avatars', 'public');
+
+            // 2. Generar un nombre personalizado y legible para el avatar
+            $extension = $request->file('avatar')->getClientOriginalExtension();
+            $nombreLimpio = Str::slug("{$request->nombres} {$request->paterno}");
+            $nombrePersonalizado = "avatar_{$user->id}_{$nombreLimpio}_" . date('Ymd_His') . ".{$extension}";
+
+            // 3. Guardar usando storeAs en la carpeta avatars
+            $user->avatar = $request->file('avatar')->storeAs('avatars', $nombrePersonalizado, 'public');
         }
 
         $user->save();

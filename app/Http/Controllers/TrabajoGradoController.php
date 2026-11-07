@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Models\TrabajoGrado;
 use App\Models\GestionAcademica;
 use App\Models\TipoTrabajo;
@@ -68,10 +69,21 @@ class TrabajoGradoController extends Controller
             return back()->withErrors(['error' => 'No hay una gestión académica activa.']);
         }
 
-        $path = $request->file('archivo')->store('trabajos_grado', 'public');
+        /** @var User $user */
+        $user = Auth::user();
+        $ciAutor = $user && property_exists($user, 'ci') ? $user->ci : ($user->ci ?? 'sincarnet');
+        // Preparamos el archivo y su nombre personalizado antes de guardarlo
+        $extension = $request->file('archivo')->getClientOriginalExtension();
+        $tituloLimpio = Str::slug($request->titulo);
+
+        // Estructura: trabajo_{ci}_{titulo}_{fecha}.pdf (ideal para identificarlo de inmediato)
+        $nombrePersonalizado = "trabajo_{$ciAutor}_{$tituloLimpio}_" . date('Ymd_His') . ".{$extension}";
+
+        // Guardamos usando storeAs en lugar de store
+        $path = $request->file('archivo')->storeAs('trabajos_grado', $nombrePersonalizado, 'public');
 
         TrabajoGrado::create([
-            'autor_id' => Auth::id(),
+            'autor_id' => $user->id,
             'tipo_id' => $request->tipo_id,
             'categoria_id' => $request->categoria_id,
             'gestion_id' => $gestionActiva->id,
@@ -139,18 +151,22 @@ class TrabajoGradoController extends Controller
      */
     public function destroy(TrabajoGrado $trabajo)
     {
-        if ($trabajo->autor_id !== auth()->id()) {
+        // 1. Verificar que el usuario autenticado sea el autor del trabajo
+        if ($trabajo->autor_id !== \Illuminate\Support\Facades\Auth::id()) {
             abort(403);
         }
 
+        // 2. Evitar que se eliminen trabajos que ya fueron evaluados (Aceptados/Rechazados)
         if ($trabajo->estado !== 'pendiente') {
             return back()->withErrors(['error' => 'No puedes eliminar un trabajo que ya ha sido evaluado.']);
         }
 
+        // 3. Eliminar el archivo físico de almacenamiento si existe
         if ($trabajo->archivo_url && Storage::disk('public')->exists($trabajo->archivo_url)) {
             Storage::disk('public')->delete($trabajo->archivo_url);
         }
 
+        // 4. Borrar el registro de la base de datos
         $trabajo->delete();
 
         return redirect()->route('estudiante.trabajos.index')->with('success', 'Trabajo de grado eliminado correctamente.');

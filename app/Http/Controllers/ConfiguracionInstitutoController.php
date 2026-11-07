@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ConfiguracionInstituto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ConfiguracionInstitutoController extends Controller
 {
@@ -39,7 +40,18 @@ class ConfiguracionInstitutoController extends Controller
             if ($instituto->logo) {
                 Storage::disk('public')->delete($instituto->logo);
             }
-            $instituto->logo = $request->file('logo')->store('instituto', 'public');
+
+            $extension = $request->file('logo')->getClientOriginalExtension();
+
+            // Usamos el campo correcto 'nombre_instituto'
+            $nombreLimpio = Str::slug($request->nombre_instituto ?? 'instituto');
+
+            // Si el instituto ya tiene ID usamos ese número, si es nuevo usamos 'nuevo'
+            $idInstituto = $instituto->exists ? $instituto->id : 'nuevo';
+
+            $nombrePersonalizado = "logo_{$idInstituto}_{$nombreLimpio}_" . date('Ymd_His') . ".{$extension}";
+
+            $instituto->logo = $request->file('logo')->storeAs('instituto', $nombrePersonalizado, 'public');
         }
 
         $instituto->save();
