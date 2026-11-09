@@ -5,7 +5,7 @@
 @section('adminlte_css')
     @parent
     @if (isset($instituto) && $instituto->logo)
-        <link rel="icon" type="image/png" href="{{ asset('storage/' . $instituto->logo) }}">
+        <link rel="icon" type="image/png" href="{{ Storage::url($instituto->logo) }}">
     @endif
 @endsection
 
@@ -35,8 +35,8 @@
                     <ul class="list-unstyled mb-3">
                         <li class="mb-2">
                             <span class="text-muted small d-block">Autor</span>
-                            <strong class="font-weight-semibold">{{ $trabajo->autor->name }}
-                                {{ $trabajo->autor->paterno }} {{ $trabajo->autor->materno }}</strong>
+                            <strong class="font-weight-semibold">{{ $trabajo->autor->name ?? '' }}
+                                {{ $trabajo->autor->paterno ?? '' }} {{ $trabajo->autor->materno ?? '' }}</strong>
                         </li>
                         <li class="mb-2">
                             <span class="text-muted small d-block">Gestión Académica</span>
@@ -144,10 +144,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
     <script>
-        // Función global para forzar la descarga directa de la imagen QR sin redirecciones
+        // Función global para forzar la descarga directa del QR con la estructura: certificado_ci_trabajoid_fecha.png
         window.downloadQrImage = function() {
             const imgElement = document.getElementById('qr-image');
             const imgSrc = imgElement ? imgElement.src : "{{ $qrCodeUrl ?? '' }}";
+
+            // Extracción de datos para el nombre del archivo
+            const ciAutor = "{{ $trabajo->autor->ci ?? ($trabajo->autor->dni ?? 'sincdi') }}";
+            const trabajoId = "{{ $trabajo->id }}";
+
+            // Fecha actual en formato YYYY-MM-DD
+            const fechaActual = new Date().toISOString().slice(0, 10);
+
+            // Construcción del nombre personalizado
+            const nombreArchivo = `certificado_${ciAutor}_${trabajoId}_${fechaActual}.png`;
 
             fetch(imgSrc)
                 .then(response => response.blob())
@@ -156,7 +166,7 @@
                     const a = document.createElement('a');
                     a.style.display = 'none';
                     a.href = blobUrl;
-                    a.download = "QR-Trabajo-{{ $trabajo->id }}.png";
+                    a.download = nombreArchivo;
                     document.body.appendChild(a);
                     a.click();
                     window.URL.revokeObjectURL(blobUrl);
@@ -245,7 +255,7 @@
                 // Bloquear atajos exclusivos para el área del visor
                 document.addEventListener('keydown', function(e) {
                     if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'p')) {
-                        if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
+                        if (e.target.tagName !== 'A') {
                             e.preventDefault();
                             alert('Acción restringida por protección de derechos de autor del documento.');
                         }
@@ -255,95 +265,3 @@
         });
     </script>
 @stop
-<!-- Carga de PDF.js desde CDN oficial -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const url = "{{ route('repositorio.visor', $trabajo->id) }}";
-
-        pdfjsLib.GlobalWorkerOptions.workerSrc =
-            'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-        let pdfDoc = null,
-            pageNum = 1,
-            pageIsRendering = false,
-            pageNumIsPending = null;
-
-        const scale = 1.3,
-            canvas = document.getElementById('pdf-render'),
-            ctx = canvas ? canvas.getContext('2d') : null;
-
-        if (canvas) {
-            // Renderizar la página especificada
-            const renderPage = num => {
-                pageIsRendering = true;
-
-                pdfDoc.getPage(num).then(page => {
-                    const viewport = page.getViewport({
-                        scale
-                    });
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-
-                    const renderCtx = {
-                        canvasContext: ctx,
-                        viewport
-                    };
-
-                    page.render(renderCtx).promise.then(() => {
-                        pageIsRendering = false;
-
-                        if (pageNumIsPending !== null) {
-                            renderPage(pageNumIsPending);
-                            pageNumIsPending = null;
-                        }
-                    });
-
-                    document.getElementById('page-num').textContent = num;
-                });
-            };
-
-            const queueRenderPage = num => {
-                if (pageIsRendering) {
-                    pageNumIsPending = num;
-                } else {
-                    renderPage(num);
-                }
-            };
-
-            // Mostrar página anterior
-            document.getElementById('prev-page').addEventListener('click', () => {
-                if (pageNum <= 1) return;
-                pageNum--;
-                queueRenderPage(pageNum);
-            });
-
-            // Mostrar página siguiente
-            document.getElementById('next-page').addEventListener('click', () => {
-                if (pageNum >= pdfDoc.numPages) return;
-                pageNum++;
-                queueRenderPage(pageNum);
-            });
-
-            // Cargar el documento PDF de forma segura
-            pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
-                pdfDoc = pdfDoc_;
-                document.getElementById('page-count').textContent = pdfDoc.numPages;
-                renderPage(pageNum);
-            });
-
-            // Bloquear atajos exclusivos para el área del visor o evitar que bloquee enlaces de descarga
-            document.addEventListener('keydown', function(e) {
-                // Si el usuario presiona Ctrl+S o Ctrl+P pero está enfocado o interactuando con el visor de PDF
-                if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'p')) {
-                    // Verificamos si el objetivo no viene de un botón de descarga o enlace externo
-                    if (e.target.tagName !== 'A') {
-                        e.preventDefault();
-                        alert('Acción restringida por protección de derechos de autor del documento.');
-                    }
-                }
-            });
-        }
-    });
-</script>

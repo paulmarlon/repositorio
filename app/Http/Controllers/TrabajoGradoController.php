@@ -77,7 +77,7 @@ class TrabajoGradoController extends Controller
         $tituloLimpio = Str::slug($request->titulo);
 
         // Estructura: trabajo_{ci}_{titulo}_{fecha}.pdf (ideal para identificarlo de inmediato)
-        $nombrePersonalizado = "trabajo_{$ciAutor}_{$tituloLimpio}_" . date('Ymd_His') . ".{$extension}";
+        $nombrePersonalizado = "trabajo_{$ciAutor}_" . date('Ymd_His') . ".{$extension}";
 
         // Guardamos usando storeAs en lugar de store
         $path = $request->file('archivo')->storeAs('trabajos_grado', $nombrePersonalizado, 'public');

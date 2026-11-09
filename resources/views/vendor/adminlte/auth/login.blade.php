@@ -12,19 +12,19 @@
     $passResetUrl = $layoutHelper->makeUrl($passResetUrl);
 @endphp
 
-@section('auth_header', __('adminlte::adminlte.login_message'))
+{{-- Cabecera traducida --}}
+@section('auth_header', 'Ingrese sus credenciales para iniciar sesión')
 
 @section('auth_body')
     <form action="{{ $loginUrl }}" method="post">
         @csrf
 
         {{-- Email field --}}
-        <label for="email" class="visually-hidden">{{ __('adminlte::adminlte.email') }}</label>
+        <label for="email" class="visually-hidden">Correo Electrónico</label>
 
         <div class="input-group mb-3">
-            <input type="email" name="email" id="email"
-                class="form-control @error('email') is-invalid @enderror"
-                value="{{ old('email') }}" placeholder="{{ __('adminlte::adminlte.email') }}" autofocus>
+            <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror"
+                value="{{ old('email') }}" placeholder="Correo Electrónico" autofocus>
 
             <div class="input-group-text">
                 <span class="bi bi-envelope {{ config('adminlte.classes_auth_icon', '') }}"></span>
@@ -38,12 +38,11 @@
         </div>
 
         {{-- Password field --}}
-        <label for="password" class="visually-hidden">{{ __('adminlte::adminlte.password') }}</label>
+        <label for="password" class="visually-hidden">Contraseña</label>
 
         <div class="input-group mb-3">
             <input type="password" name="password" id="password"
-                class="form-control @error('password') is-invalid @enderror"
-                placeholder="{{ __('adminlte::adminlte.password') }}">
+                class="form-control @error('password') is-invalid @enderror" placeholder="Contraseña">
 
             <div class="input-group-text">
                 <span class="bi bi-lock-fill {{ config('adminlte.classes_auth_icon', '') }}"></span>
@@ -59,11 +58,11 @@
         {{-- Login field --}}
         <div class="row">
             <div class="col-7">
-                <div class="form-check" title="{{ __('adminlte::adminlte.remember_me_hint') }}">
-                    <input class="form-check-input" type="checkbox" name="remember"
-                           id="remember" {{ old('remember') ? 'checked' : '' }}>
+                <div class="form-check" title="Recordar sesión en este equipo">
+                    <input class="form-check-input" type="checkbox" name="remember" id="remember"
+                        {{ old('remember') ? 'checked' : '' }}>
                     <label class="form-check-label" for="remember">
-                        {{ __('adminlte::adminlte.remember_me') }}
+                        Recuerdame
                     </label>
                 </div>
             </div>
@@ -72,30 +71,30 @@
                 <div class="d-grid">
                     <button type="submit" class="btn {{ config('adminlte.classes_auth_btn', 'btn-primary') }}">
                         <i class="bi bi-box-arrow-in-right me-1"></i>
-                        {{ __('adminlte::adminlte.sign_in') }}
+                        Ingresar
                     </button>
                 </div>
             </div>
         </div>
     </form>
-@include('adminlte::auth.social-links', ['fallbackText' => __('adminlte::adminlte.sign_in')])
+    @include('adminlte::auth.social-links', ['fallbackText' => 'Ingresar'])
 @stop
 
 @section('auth_footer')
     {{-- Password reset link --}}
-    @if($passResetUrl)
+    @if ($passResetUrl)
         <p class="my-0">
             <a href="{{ $passResetUrl }}">
-                {{ __('adminlte::adminlte.i_forgot_my_password') }}
+                Olvidé mi contraseña
             </a>
         </p>
     @endif
 
     {{-- Register link --}}
-    @if($registerUrl)
+    @if ($registerUrl)
         <p class="my-0">
             <a href="{{ $registerUrl }}">
-                {{ __('adminlte::adminlte.register_a_new_membership') }}
+                Registrar una nueva membresía
             </a>
         </p>
     @endif

@@ -26,15 +26,15 @@ class GestionAcademicaController extends Controller
             'activo' => 'nullable|boolean',
         ]);
 
-        // Manejar el checkbox de activo de forma segura
+        // CORRECCIÓN POSTGRESQL: Asignamos un booleano (true/false) en lugar de enteros (1/0)
         $data = $request->all();
-        $data['activo'] = $request->has('activo') ? 1 : 0;
+        $data['activo'] = $request->has('activo') ? true : false;
 
         GestionAcademica::create($data);
 
         return redirect()->route('admin.gestiones.index')
             ->with('mensaje', 'Gestión académica creada exitosamente.')
-            ->with('icon', 'success'); // o 'error', 'warning', 'info'
+            ->with('icon', 'success');
     }
 
     public function show(GestionAcademica $gestionAcademica)
@@ -56,14 +56,15 @@ class GestionAcademicaController extends Controller
             'activo' => 'nullable|boolean',
         ]);
 
+        // CORRECCIÓN POSTGRESQL: Asignamos un booleano (true/false) en lugar de enteros (1/0)
         $data = $request->all();
-        $data['activo'] = $request->has('activo') ? 1 : 0;
+        $data['activo'] = $request->has('activo') ? true : false;
 
         $gestion->update($data);
 
         return redirect()->route('admin.gestiones.index')
             ->with('mensaje', 'Gestión académica actualizada exitosamente.')
-            ->with('icon', 'success'); // o 'error', 'warning', 'info'
+            ->with('icon', 'success');
     }
 
     public function destroy(GestionAcademica $gestion)
@@ -75,7 +76,6 @@ class GestionAcademicaController extends Controller
             ->with('icon', 'success');
     }
 
-
     public function trash()
     {
         $gestiones = GestionAcademica::onlyTrashed()->get();
@@ -86,8 +86,9 @@ class GestionAcademicaController extends Controller
     {
         $gestionAcademica = GestionAcademica::onlyTrashed()->findOrFail($id);
         $gestionAcademica->restore();
+
         return redirect()->route('admin.gestiones.index')
-            ->with('mensaje', 'Gestión académica restaurada exitosamente..')
-            ->with('icon', 'success'); // o 'error', 'warning', 'info'
+            ->with('mensaje', 'Gestión académica restaurada exitosamente.')
+            ->with('icon', 'success');
     }
 }
