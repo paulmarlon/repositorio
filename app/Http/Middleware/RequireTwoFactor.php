@@ -29,8 +29,8 @@ class RequireTwoFactor
 
             // ⚠️ SIMULACIÓN TEMPORAL: Escribimos el código en los logs de Render
             // en lugar de enviar el correo por SMTP para evitar el TimeOut en producción.
-            Log . info("--- CODIGO 2FA GENERADO PARA " . $user->email . " ---");
-            Log . info("CODIGO: {$code}");
+            Log::info("--- CODIGO 2FA GENERADO PARA " . $user->email . " ---");
+            Log::info("CODIGO: {$code}");
 
             /*
             // Bloque de correo original (comentado temporalmente para pruebas)
