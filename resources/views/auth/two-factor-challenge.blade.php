@@ -26,3 +26,9 @@
         </div>
     </form>
 @stop
+
+@section('adminlte_js')
+    <!-- Carga obligatoria de jQuery antes de cualquier plugin dependiente -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @yield('js')
+@stop
