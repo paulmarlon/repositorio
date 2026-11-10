@@ -14,5 +14,9 @@ php artisan view:cache
 # Ejecutar migraciones en Supabase automáticamente
 php artisan migrate --force
 
+# --- NUEVO: Iniciar el procesador de colas en segundo plano ---
+# Esto procesará los correos y tareas pendientes sin bloquear las peticiones web
+php artisan queue:work --tries=3 --timeout=90 &
+
 # Iniciar Apache en primer plano
 exec apache2-foreground

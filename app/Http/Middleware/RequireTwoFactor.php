@@ -33,15 +33,15 @@ class RequireTwoFactor
             $fromEmail = $instituto->email ?? config('mail.from.address');
 
             try {
-                // Envío real del correo electrónico
+                // Usamos ->queue() para que el envío se procese en segundo plano
+                // y la pantalla cargue de forma instantánea sin retrasos de 60 segundos
                 Mail::raw("Tu código de verificación de doble factor es: {$code}", function ($message) use ($user, $fromName, $fromEmail) {
                     $message->to($user->email)
                         ->from($fromEmail, $fromName)
                         ->subject('Código de Autenticación 2FA');
-                });
+                })->afterCommit(); // Envía el correo solo si la transacción de base de datos se completa con éxito
             } catch (\Exception $e) {
-                // Si ocurre un error de conexión con el servidor SMTP, lo guardamos en los logs para depuración
-                Log::error("Error al enviar correo 2FA: " . $e->getMessage());
+                Log::error("Error al encolar correo 2FA: " . $e->getMessage());
             }
 
             session(['auth.id' => $user->id, 'auth.remember' => session()->has('auth.remember')]);
