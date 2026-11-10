@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use App\Models\User;
 
 class TwoFactorController extends Controller
 {
     public function create()
     {
-        if (!session()->has('auth.id')) {
+        $authId = Session::get('auth.id');
+
+        if (!$authId) {
             return redirect()->route('login');
         }
 
@@ -23,27 +27,37 @@ class TwoFactorController extends Controller
             'two_factor_code' => ['required', 'string'],
         ]);
 
-        $userId = session('auth.id');
-        if (!$userId) {
-            return redirect()->route('login');
+        /** @var int|string|null $authId */
+        $authId = Session::get('auth.id');
+
+        if (!$authId) {
+            return redirect()->route('login')->withErrors(['email' => 'La sesión ha expirado. Por favor, inicia sesión de nuevo.']);
         }
 
-        /** @var \App\Models\User|null $user */
-        $user = \App\Models\User::find($userId);
+        /** @var User|null $user */
+        $user = User::find($authId);
 
-        if (!$user || $user->two_factor_code !== $request->two_factor_code || now()->greaterThan($user->two_factor_expires_at)) {
+        if (!$user) {
+            Session::forget('auth.id');
+            return redirect()->route('login')->withErrors(['email' => 'No se encontró el usuario asociado a esta sesión.']);
+        }
+
+        if (!$user->two_factor_code || $user->two_factor_code !== $request->input('two_factor_code') || now()->greaterThan($user->two_factor_expires_at)) {
             return back()->withErrors(['two_factor_code' => 'El código de verificación es inválido o ha expirado.']);
         }
 
+        // Limpiar códigos temporales
         $user->two_factor_code = null;
         $user->two_factor_expires_at = null;
         $user->save();
 
-        Auth::login($user, session('auth.remember', false));
+        // Autenticar al usuario oficialmente
+        Auth::login($user);
 
-        // Marcar el 2FA como superado en esta sesión y limpiar credenciales temporales
-        session(['2fa_pending' => false]);
-        session()->forget(['auth.id', 'auth.remember']);
+        // Actualizar variables de sesión usando la fachada Session
+        Session::put('2fa_pending', false);
+        Session::forget('auth.id');
+        Session::forget('auth.remember');
 
         return redirect()->intended(route('home'));
     }
