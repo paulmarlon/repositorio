@@ -27,23 +27,22 @@ class RequireTwoFactor
             $user->two_factor_expires_at = now()->addMinutes(10);
             $user->save();
 
-            // ⚠️ SIMULACIÓN TEMPORAL: Escribimos el código en los logs de Render
-            // en lugar de enviar el correo por SMTP para evitar el TimeOut en producción.
-            Log::info("--- CODIGO 2FA GENERADO PARA " . $user->email . " ---");
-            Log::info("CODIGO: {$code}");
-
-            /*
-            // Bloque de correo original (comentado temporalmente para pruebas)
+            // Obtenemos la configuración institucional de la base de datos
             $instituto = ConfiguracionInstituto::first();
             $fromName = $instituto->nombre ?? config('mail.from.name');
             $fromEmail = $instituto->email ?? config('mail.from.address');
 
-            Mail::raw("Tu código de verificación de doble factor es: {$code}", function ($message) use ($user, $fromName, $fromEmail) {
-                $message->to($user->email)
-                    ->from($fromEmail, $fromName)
-                    ->subject('Código de Autenticación 2FA');
-            });
-            */
+            try {
+                // Envío real del correo electrónico
+                Mail::raw("Tu código de verificación de doble factor es: {$code}", function ($message) use ($user, $fromName, $fromEmail) {
+                    $message->to($user->email)
+                        ->from($fromEmail, $fromName)
+                        ->subject('Código de Autenticación 2FA');
+                });
+            } catch (\Exception $e) {
+                // Si ocurre un error de conexión con el servidor SMTP, lo guardamos en los logs para depuración
+                Log::error("Error al enviar correo 2FA: " . $e->getMessage());
+            }
 
             session(['auth.id' => $user->id, 'auth.remember' => session()->has('auth.remember')]);
             Auth::logout();
