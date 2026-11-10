@@ -5,14 +5,7 @@
 @section('adminlte_css')
     @parent
     @if (isset($instituto) && $instituto->logo)
-        <link rel="icon" type="image/png" href="{{ asset('storage/' . $instituto->logo) }}">
-    @endif
-@endsection
-
-@section('adminlte_css')
-    @parent
-    @if (isset($instituto) && $instituto->logo)
-        <link rel="icon" type="image/png" href="{{ asset('storage/' . $instituto->logo) }}">
+        <link rel="icon" type="image/png" href="{{ Storage::disk('public')->url($instituto->logo) }}">
     @endif
 @endsection
 
@@ -124,8 +117,8 @@
                                     </td>
                                     <td>
                                         @if ($trabajo->archivo_url)
-                                            <a href="{{ asset('storage/' . $trabajo->archivo_url) }}" target="_blank"
-                                                class="btn btn-sm btn-outline-danger shadow-sm">
+                                            <a href="{{ Storage::disk('public')->url($trabajo->archivo_url) }}"
+                                                target="_blank" class="btn btn-sm btn-outline-danger shadow-sm">
                                                 <i class="bi bi-file-earmark-pdf-fill"></i> Ver PDF
                                             </a>
                                         @else

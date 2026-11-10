@@ -77,12 +77,12 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
+    'logo' => '',
     'logo_img' => 'vendor/adminlte/dist/assets/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image opacity-75 shadow',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs opacity-75',
-    'logo_img_alt' => 'Admin Logo',
+    'logo_img_alt' => '',
 
     /*
     |--------------------------------------------------------------------------
@@ -779,11 +779,6 @@ return [
     'menu' => [
         // Navbar items:
         [
-            'type' => 'navbar-search',
-            'text' => 'search',
-            'topnav_right' => true,
-        ],
-        [
             'text' => 'Perfil',
             'route' => 'profile.edit',
             'icon' => 'bi bi-person-badge me-1',
@@ -799,11 +794,6 @@ return [
             'topnav_right' => true,
         ],
 
-        // Sidebar items:
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
         // MÓDULO REPOSITORIO GLOBAL
         ['header' => 'REPOSITORIO INSTITUCIONAL'],
         [

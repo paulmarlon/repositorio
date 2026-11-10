@@ -23,12 +23,13 @@
         <label for="email" class="visually-hidden">Correo Electrónico</label>
 
         <div class="input-group mb-3">
-            <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror"
-                value="{{ old('email') }}" placeholder="Correo Electrónico" autofocus>
-
+            {{-- 1. Movimos el contenedor del icono a la IZQUIERDA --}}
             <div class="input-group-text">
                 <span class="bi bi-envelope {{ config('adminlte.classes_auth_icon', '') }}"></span>
             </div>
+
+            <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror"
+                value="{{ old('email') }}" placeholder="Correo Electrónico" autofocus>
 
             @error('email')
                 <span class="invalid-feedback" role="alert">
@@ -41,12 +42,13 @@
         <label for="password" class="visually-hidden">Contraseña</label>
 
         <div class="input-group mb-3">
-            <input type="password" name="password" id="password"
-                class="form-control @error('password') is-invalid @enderror" placeholder="Contraseña">
-
+            {{-- 1. Movimos el contenedor del icono a la IZQUIERDA --}}
             <div class="input-group-text">
                 <span class="bi bi-lock-fill {{ config('adminlte.classes_auth_icon', '') }}"></span>
             </div>
+
+            <input type="password" name="password" id="password"
+                class="form-control @error('password') is-invalid @enderror" placeholder="Contraseña">
 
             @error('password')
                 <span class="invalid-feedback" role="alert">

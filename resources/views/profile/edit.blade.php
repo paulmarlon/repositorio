@@ -36,9 +36,8 @@
                         <div class="form-group text-center mb-4">
                             <div class="position-relative d-inline-block">
                                 <img id="avatar-preview"
-                                    src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->nombres) . '&background=0D8ABC&color=fff&size=160' }}"
-                                    class="img-circle elevation-3 border border-primary" width="120" height="120"
-                                    alt="Avatar" style="object-fit: cover;">
+                                    src="{{ $user->avatar ? Storage::disk('public')->url($user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->nombres) . '&background=0D8ABC&color=fff&size=160' }}"class="img-circle elevation-3 border border-primary"
+                                    width="120" height="120" alt="Avatar" style="object-fit: cover;">
                             </div>
                         </div>
 

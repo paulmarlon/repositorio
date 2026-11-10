@@ -50,14 +50,15 @@
             $institutoConfig = \App\Models\ConfiguracionInstituto::first();
             $logoPath =
                 $institutoConfig && !empty($institutoConfig->logo)
-                    ? asset('storage/' . $institutoConfig->logo)
+                    ? Storage::disk('public')->url($institutoConfig->logo)
                     : asset(config('adminlte.preloader.img.path', 'vendor/adminlte/dist/assets/img/AdminLTELogo.png'));
         @endphp
 
         <img src="{{ $logoPath }}" class="rounded-circle {{ $imgEffect }}"
             alt="{{ config('adminlte.preloader.img.alt', 'AdminLTE Preloader Image') }}"
             width="{{ config('adminlte.preloader.img.width', 60) }}"
-            height="{{ config('adminlte.preloader.img.height', 60) }}" style="{{ implode(';', $imgStyles) }}">
+            height="{{ config('adminlte.preloader.img.height', 60) }}"
+            style="{{ implode(';', $imgStyles) }}; object-fit: contain;">
     @endif
 
 </div>

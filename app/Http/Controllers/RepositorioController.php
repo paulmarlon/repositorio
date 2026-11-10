@@ -67,6 +67,9 @@ class RepositorioController extends Controller
     /**
      * Visor protegido tipo Scribd (Renderiza el PDF sin exponer la ruta física directa).
      */
+    /**
+     * Visor protegido tipo Scribd (Renderiza el PDF sin exponer la ruta física directa).
+     */
     public function visor(TrabajoGrado $trabajo)
     {
         /** @var User $user */
@@ -80,20 +83,18 @@ class RepositorioController extends Controller
             abort(403, 'No autorizado para visualizar este documento.');
         }
 
-        // Determinar en qué disco se encuentra almacenado
-        $disk = Storage::disk('public')->exists($trabajo->archivo_url) ? 'public' : 'local';
-
-        if (!$trabajo->archivo_url || !Storage::disk($disk)->exists($trabajo->archivo_url)) {
+        // Verificamos si el archivo existe en el disco configurado (S3 / Public)
+        if (!$trabajo->archivo_url || !Storage::disk('public')->exists($trabajo->archivo_url)) {
             abort(404, 'El archivo PDF no se encuentra disponible.');
         }
 
-        // Obtenemos la ruta física absoluta del archivo
-        $path = Storage::disk($disk)->path($trabajo->archivo_url);
+        // Obtenemos el contenido del archivo de forma segura desde Supabase S3 y lo servimos como stream inline
+        $fileStream = Storage::disk('public')->get($trabajo->archivo_url);
+        $fileName = basename($trabajo->archivo_url);
 
-        // Servimos el archivo con los headers adecuados para visualización en el navegador
-        return response()->file($path, [
+        return response($fileStream, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . basename($path) . '"',
+            'Content-Disposition' => 'inline; filename="' . $fileName . '"',
         ]);
     }
     /**

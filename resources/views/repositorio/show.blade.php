@@ -5,7 +5,7 @@
 @section('adminlte_css')
     @parent
     @if (isset($instituto) && $instituto->logo)
-        <link rel="icon" type="image/png" href="{{ Storage::url($instituto->logo) }}">
+        <link rel="icon" type="image/png" href="{{ Storage::disk('public')->url($instituto->logo) }}">
     @endif
 @endsection
 

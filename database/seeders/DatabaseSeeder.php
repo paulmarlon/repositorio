@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             'paterno' => 'quispe',
             'materno' => 'veizaga',
             'ci' => '4751005',
-            'email' => 'paul@adhara.tech',
+            'email' => 'paulmarlonquispeveizaga@gmail.com',
             'password' => Hash::make('7539518520'),
             'avatar' => null,
             'activo' => true,

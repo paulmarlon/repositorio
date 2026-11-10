@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Login;
 use App\Listeners\LogSuccessfulLogin;
+use Illuminate\Support\Facades\Storage;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -50,7 +51,9 @@ class AppServiceProvider extends ServiceProvider
                     config(['adminlte.logo' => '<b>' . e($instituto->nombre_instituto) . '</b>']);
                 }
                 if ($instituto->logo) {
-                    config(['adminlte.logo_img' => 'storage/' . $instituto->logo]);
+                    // Solución limpia compatible con Intelephense
+                    $logoUrl = Storage::url($instituto->logo);
+                    config(['adminlte.logo_img' => $logoUrl]);
                 }
             }
 

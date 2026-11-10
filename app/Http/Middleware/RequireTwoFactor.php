@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Models\ConfiguracionInstituto;
 
 class RequireTwoFactor
 {
@@ -25,8 +26,14 @@ class RequireTwoFactor
             $user->two_factor_expires_at = now()->addMinutes(10);
             $user->save();
 
-            Mail::raw("Tu código de verificación de doble factor es: {$code}", function ($message) use ($user) {
+            // Obtenemos la configuración institucional de la base de datos
+            $instituto = ConfiguracionInstituto::first();
+            $fromName = $instituto->nombre ?? config('mail.from.name');
+            $fromEmail = $instituto->email ?? config('mail.from.address');
+
+            Mail::raw("Tu código de verificación de doble factor es: {$code}", function ($message) use ($user, $fromName, $fromEmail) {
                 $message->to($user->email)
+                    ->from($fromEmail, $fromName) // <--- Aquí personalizamos el remitente y nombre institucional
                     ->subject('Código de Autenticación 2FA');
             });
 

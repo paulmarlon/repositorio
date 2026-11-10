@@ -5,7 +5,7 @@
 @section('adminlte_css')
     @parent
     @if (isset($instituto) && $instituto->logo)
-        <link rel="icon" type="image/png" href="{{ asset('storage/' . $instituto->logo) }}">
+        <link rel="icon" type="image/png" href="{{ Storage::disk('public')->url($instituto->logo) }}">
     @endif
 @endsection
 
@@ -54,6 +54,7 @@
                             <th>Estado</th>
                             <th>Archivo</th>
                             <th>Puntaje</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,7 +74,7 @@
                                 </td>
                                 <td>
                                     @if ($trabajo->archivo_url)
-                                        <a href="{{ asset('storage/' . $trabajo->archivo_url) }}" target="_blank"
+                                        <a href="{{ Storage::disk('public')->url($trabajo->archivo_url) }}" target="_blank"
                                             class="btn btn-sm btn-info">
                                             <i class="fas fa-file-pdf"></i> Ver PDF
                                         </a>
@@ -101,7 +102,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center text-muted py-4">No has registrado ningún trabajo de
+                                <td colspan="7" class="text-center text-muted py-4">No has registrado ningún trabajo de
                                     grado en esta gestión.</td>
                             </tr>
                         @endforelse

@@ -19,7 +19,7 @@
         <div class="card shadow border-0 rounded-4">
             <div class="card-header bg-primary text-white text-center py-4 rounded-top-4">
                 @if (isset($configuracion) && $configuracion->logo)
-                    <img src="{{ asset('storage/' . $configuracion->logo) }}" alt="Logo"
+                    <img src="{{ Storage::disk('public')->url($configuracion->logo) }}" alt="Logo"
                         class="mb-2 rounded-circle bg-white p-1"
                         style="width: 60px; height: 60px; object-fit: contain;">
                 @else

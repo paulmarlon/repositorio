@@ -4,15 +4,16 @@
 @section('adminlte_css')
     @parent
     @if (isset($instituto) && $instituto->logo)
-        <link rel="icon" type="image/png" href="{{ asset('storage/' . $instituto->logo) }}">
+        <link rel="icon" type="image/png" href="{{ Storage::disk('public')->url($instituto->logo) }}">
     @endif
 @endsection
+
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{ __('Dashboard') }}</div>
+                    <div class="card-header">{{ __('Panel de Control') }}</div>
 
                     <div class="card-body">
                         @if (session('status'))
@@ -21,7 +22,7 @@
                             </div>
                         @endif
 
-                        {{ __('You are logged in!') }}
+                        {{ __('¡Has iniciado sesión con éxito!') }}
                     </div>
                 </div>
             </div>

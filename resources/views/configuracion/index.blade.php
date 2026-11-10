@@ -5,7 +5,7 @@
 @section('adminlte_css')
     @parent
     @if (isset($instituto) && $instituto->logo)
-        <link rel="icon" type="image/png" href="{{ asset('storage/' . $instituto->logo) }}">
+        <link rel="icon" type="image/png" href="{{ Storage::disk('public')->url($instituto->logo) }}">
     @endif
 @endsection
 
@@ -59,7 +59,7 @@
                             <div class="text-center mb-4">
                                 <div class="position-relative d-inline-block">
                                     <img id="logo-preview"
-                                        src="{{ isset($instituto->logo) ? asset('storage/' . $instituto->logo) : 'https://ui-avatars.com/api/?name=Instituto&background=0D8ABC&color=fff&size=160' }}"
+                                        src="{{ isset($instituto->logo) && $instituto->logo ? Storage::disk('public')->url($instituto->logo) : 'https://ui-avatars.com/api/?name=Instituto&background=0D8ABC&color=fff&size=160' }}"
                                         class="img-thumbnail rounded-circle shadow-sm" width="120" height="120"
                                         alt="Logo" style="object-fit: cover;">
                                 </div>
