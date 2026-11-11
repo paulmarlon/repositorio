@@ -24,9 +24,9 @@ RUN docker-php-ext-install pdo pdo_pgsql bcmath
 # 5. Habilitar mod_rewrite de Apache para que funcionen las URLs amigables (routing) de Laravel
 RUN a2enmod rewrite
 
-# 6. Desactivar el módulo mpm_event y activar mpm_prefork para evitar el conflicto "AH00534: More than one MPM loaded" con PHP
-RUN a2dismod mpm_event mpm_worker || true \
-    && a2enmod mpm_prefork
+# 6. Desactivar módulos conflictivos de Apache y activar mpm_prefork de forma segura
+RUN a2dismod mpm_event mpm_worker || true
+RUN a2enmod mpm_prefork
 
 # 7. Apuntar el DocumentRoot por defecto de Apache a la carpeta /public de Laravel
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf

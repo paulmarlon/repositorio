@@ -1,10 +1,15 @@
 #!/bin/bash
 set -e
 
-# Configurar Apache para que escuche en el puerto dinámico asignado por Render
+# Configurar Apache para que escuche en el puerto dinámico asignado por Railway/Render
 PORT=${PORT:-80}
 sed -i "s/Listen 80/Listen ${PORT}/g" /etc/apache2/ports.conf
 sed -i "s/<VirtualHost \*:80>/<VirtualHost \*:${PORT}>/g" /etc/apache2/sites-available/000-default.conf
+
+# Limpiar cachés previas para evitar conflictos de URI malformadas
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
 
 # Ejecutar optimizaciones de Laravel con las variables de producción cargadas
 php artisan config:cache
@@ -14,8 +19,7 @@ php artisan view:cache
 # Ejecutar migraciones en Supabase automáticamente
 php artisan migrate --force
 
-# --- NUEVO: Iniciar el procesador de colas en segundo plano ---
-# Esto procesará los correos y tareas pendientes sin bloquear las peticiones web
+# Iniciar el procesador de colas en segundo plano
 php artisan queue:work --tries=3 --timeout=90 &
 
 # Iniciar Apache en primer plano
